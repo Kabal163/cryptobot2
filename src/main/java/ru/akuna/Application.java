@@ -6,11 +6,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
-import ru.akuna.models.Currencies;
+import ru.akuna.config.MainConfig;
 import ru.akuna.models.Markets;
-import ru.akuna.models.Ticker;
+import ru.akuna.msg.MessageProvider;
 
 import static ru.akuna.BittrexUrls.*;
 
@@ -24,10 +26,13 @@ public class Application
 
     public static void main(String[] args)
     {
-        SpringApplication.run(Application.class);
+        //SpringApplication.run(Application.class);
+        ApplicationContext context = new AnnotationConfigApplicationContext(MainConfig.class);
+        MessageProvider msgProvider = (MessageProvider) context.getBean("TELEGRAM_MSG_PROVIDER");
+        msgProvider.sendMessage("Helllllo!");
     }
 
-    @Bean
+   /* @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
     }
@@ -35,9 +40,8 @@ public class Application
     @Bean
     public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
         return args -> {
-            Markets markets = restTemplate.getForObject(
-                    GET_MARKETS, Markets.class);
-            log.info(markets.toString());
+            ApplicationContext context
+            log.info();
         };
-    }
+    }*/
 }
