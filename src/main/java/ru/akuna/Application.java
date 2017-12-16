@@ -8,11 +8,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
-import ru.akuna.models.Currencies;
-import ru.akuna.models.Markets;
-import ru.akuna.models.Ticker;
+import ru.akuna.models.Tickers;
 
-import static ru.akuna.BittrexUrls.*;
+import static ru.akuna.BittrexUrls.GET_TICKER;
 
 /**
  * Created by Los Pepes on 12/9/2017.
@@ -35,9 +33,27 @@ public class Application
     @Bean
     public CommandLineRunner run(RestTemplate restTemplate) throws Exception {
         return args -> {
-            Markets markets = restTemplate.getForObject(
+          /*  Markets markets = restTemplate.getForObject(
                     GET_MARKETS, Markets.class);
             log.info(markets.toString());
+        *//*    for (Market market : markets.getMarkets())
+            {
+                log.info("market: " + market.toString());
+            }*//*
+
+            Ticker ticker = restTemplate.getForObject(GET_TICKER,  Ticker.class);
+            log.info(ticker.toString());*/
+
+            Object[] possibleValues = TopMarkets.values();
+
+
+
+            while(true)
+            {
+                Tickers tickers = restTemplate.getForObject(GET_TICKER + TopMarkets.BTC2XRP.toString(), Tickers.class);
+                log.info(tickers.toString());
+            }
+
         };
     }
 }
