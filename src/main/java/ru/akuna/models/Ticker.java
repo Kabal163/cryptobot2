@@ -1,10 +1,16 @@
 package ru.akuna.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
+import java.util.Locale;
 
 /**
  * Created by Los Pepes on 12/9/2017.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Ticker
 {
     private boolean success;
@@ -19,8 +25,13 @@ public class Ticker
     @JsonProperty("Last")
     private double last;
 
+    private DecimalFormat df;
+
+
     public Ticker()
     {
+        df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
+        df.setMaximumFractionDigits(340); // 340 = DecimalFormat.DOUBLE_FRACTION_DIGITS
     }
 
     public boolean isSuccess()
@@ -48,6 +59,11 @@ public class Ticker
         return bid;
     }
 
+    public String getStringBid()
+    {
+        return df.format(bid);
+    }
+
     public void setBid(double bid)
     {
         this.bid = bid;
@@ -58,6 +74,11 @@ public class Ticker
         return ask;
     }
 
+    public String getStringAsk()
+    {
+        return df.format(ask);
+    }
+
     public void setAsk(double ask)
     {
         this.ask = ask;
@@ -66,6 +87,11 @@ public class Ticker
     public double getLast()
     {
         return last;
+    }
+
+    public String getStringLast()
+    {
+        return df.format(last);
     }
 
     public void setLast(double last)
@@ -79,9 +105,9 @@ public class Ticker
         return "Ticker{" +
                 "success=" + success +
                 ", message='" + message + '\'' +
-                ", bid=" + bid +
-                ", ask=" + ask +
-                ", last=" + last +
+                ", bid=" + getStringBid() +
+                ", ask=" + getStringAsk() +
+                ", last=" + getStringLast() +
                 '}';
     }
 }

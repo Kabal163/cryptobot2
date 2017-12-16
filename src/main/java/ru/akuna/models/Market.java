@@ -15,7 +15,7 @@ public class Market
     private String marketCurrency;
 
     @JsonProperty("BaseCurrency")
-    private String BaseCurrency;
+    private String baseCurrency;
 
     @JsonProperty("MarketCurrencyLong")
     private String marketCurrencyLong;
@@ -51,12 +51,12 @@ public class Market
 
     public String getBaseCurrency()
     {
-        return BaseCurrency;
+        return baseCurrency;
     }
 
     public void setBaseCurrency(String baseCurrency)
     {
-        BaseCurrency = baseCurrency;
+        this.baseCurrency = baseCurrency;
     }
 
     public String getMarketCurrencyLong()
@@ -124,7 +124,7 @@ public class Market
     {
         return "Market{" +
                 "marketCurrency='" + marketCurrency + '\'' +
-                ", BaseCurrency='" + BaseCurrency + '\'' +
+                ", baseCurrency='" + baseCurrency + '\'' +
                 ", marketCurrencyLong='" + marketCurrencyLong + '\'' +
                 ", baseCurrencyLong='" + baseCurrencyLong + '\'' +
                 ", minTradeSize=" + minTradeSize +

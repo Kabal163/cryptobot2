@@ -29,6 +29,7 @@ public class MainConfig
     }
 
     @Bean
+    @Scope("prototype")
     public Properties properties(){
         return new Properties();
     }

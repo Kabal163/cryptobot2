@@ -6,9 +6,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
+import ru.akuna.config.MainConfig;
 import ru.akuna.models.Tickers;
+import ru.akuna.msg.MessageProvider;
 
 import static ru.akuna.BittrexUrls.GET_TICKER;
 
@@ -23,9 +27,13 @@ public class Application
     public static void main(String[] args)
     {
         SpringApplication.run(Application.class);
+
+        ApplicationContext context = new AnnotationConfigApplicationContext(MainConfig.class);
+        MessageProvider msgProvider = (MessageProvider) context.getBean("TELEGRAM_MSG_PROVIDER");
+        msgProvider.sendMessage("Helllllo!");
     }
 
-    @Bean
+ @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
     }
@@ -43,10 +51,6 @@ public class Application
 
             Ticker ticker = restTemplate.getForObject(GET_TICKER,  Ticker.class);
             log.info(ticker.toString());*/
-
-            Object[] possibleValues = TopMarkets.values();
-
-
 
             while(true)
             {

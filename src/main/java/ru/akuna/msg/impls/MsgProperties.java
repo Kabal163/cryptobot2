@@ -1,7 +1,6 @@
 package ru.akuna.msg.impls;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import ru.akuna.Application;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -82,7 +81,6 @@ public class MsgProperties
                 e.printStackTrace();
             }
         }
-
     }
 
 }
