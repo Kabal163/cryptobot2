@@ -9,5 +9,7 @@ public interface BittrexUrls
 
     String GET_CURRENCIES = "https://bittrex.com/api/v1.1/public/getcurrencies";
 
-    String GET_TICKER = "https://bittrex.com/api/v1.1/public/getticker?market=";
+    String GET_TICKER = "https://bittrex.com/api/v1.1/public/getticker?market={0}";
+
+    String GET_ORDER_BOOK = "https://bittrex.com/api/v1.1/public/getorderbook?market={0}&type=both";
 }
