@@ -28,7 +28,6 @@ public class MarketService
     private OrderBookWrapper getOrderBook(String market)
     {
         String getOrderBookUrl = MessageFormat.format(GET_ORDER_BOOK, market);
-        log.debug("getOrderBookUrl = " + getOrderBookUrl);
 
         return restTemplate.getForObject(getOrderBookUrl, OrderBookWrapper.class);
     }
@@ -36,7 +35,6 @@ public class MarketService
     private TickerWrapper getTicker(String market)
     {
         String getTickerUrl = MessageFormat.format(GET_TICKER, market);
-        log.info("getTickerUrl = " + getTickerUrl);
 
         return restTemplate.getForObject(getTickerUrl, TickerWrapper.class);
     }
