@@ -28,7 +28,7 @@ public class Application
     }
 
     @Bean
-    public CommandLineRunner run(MarketService marketService) throws Exception {
+    public CommandLineRunner run() throws Exception {
         return args -> {
             sayHelllllo();
 
