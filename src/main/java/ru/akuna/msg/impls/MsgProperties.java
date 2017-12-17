@@ -20,17 +20,18 @@ public class MsgProperties
     @Autowired
     private Properties properties;
 
+    private File file;
+
     public void init()
     {
-        String path = "";
-        URL url = getClass().getClassLoader().getResource("msg.properties");
-        if(url != null) path = url.getFile().replaceAll("%20", " ");
+        URL url = getClass().getClassLoader().getResource("config/msg.properties");
+        if(url != null) file = new File(url.getFile().replaceAll("%20", " "));
 
-        try(FileInputStream fis = new FileInputStream(path))
+        try(FileInputStream fis = new FileInputStream(file.getPath()))
         {
             properties.load(fis);
         }
-        catch (IOException e)
+        catch (IOException | NullPointerException e)
         {
             tryToFind();
         }
@@ -73,7 +74,8 @@ public class MsgProperties
         if(files.size() == 1)
         {
             File msgConfig = files.get(0);
-            try(FileInputStream fis = new FileInputStream(msgConfig.getPath()))
+            file = new File(msgConfig.getPath());
+            try(FileInputStream fis = new FileInputStream(file.getPath()))
             {
                 properties.load(fis);
             } catch (IOException e)
