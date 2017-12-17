@@ -3,14 +3,15 @@ package ru.akuna;
 public enum TopMarkets {
     BTC2LTC("BTC-LTC"),
     BTC2DOGE("BTC-DOGE"),
-    BTC2XRP("BTC-XRP");
+    BTC2XRP("BTC-XRP"),
+    USDT2BTC("USDT-BTC");
 
     private final String text;
 
     /**
      * @param text
      */
-    private TopMarkets(final String text) {
+    TopMarkets(final String text) {
         this.text = text;
     }
 
