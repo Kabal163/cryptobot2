@@ -6,9 +6,11 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.client.RestTemplateBuilder;
+import org.springframework.context.MessageSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 import ru.akuna.logic.MarketService;
+import ru.akuna.msg.MessageProvider;
 
 /**
  * Created by Los Pepes on 12/9/2017.
@@ -38,9 +40,9 @@ public class Application
     }
 
     @Bean
-    public CommandLineRunner run(MarketService marketService) throws Exception {
+    public CommandLineRunner run(MessageProvider messageProvider) throws Exception {
         return args -> {
-            marketService.createMarketJob(TopMarkets.USDT2BTC.toString()).start();
+            messageProvider.sendMessage("Hellooo from cryptobot!");
         };
     }
 }
