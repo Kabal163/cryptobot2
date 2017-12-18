@@ -12,6 +12,7 @@ import java.text.MessageFormat;
 import static ru.akuna.BittrexUrls.GET_ORDER_BOOK;
 import static ru.akuna.BittrexUrls.GET_TICKER;
 
+
 public class MarketService
 {
     @Autowired

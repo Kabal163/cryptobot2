@@ -4,15 +4,18 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import ru.akuna.providers.ApplicationContextProvider;
+import ru.akuna.tools.TextTools;
 
-import java.text.DecimalFormat;
-import java.text.DecimalFormatSymbols;
-import java.util.Locale;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TickerWrapper
 {
+    @Autowired
+    private TextTools textTools = ApplicationContextProvider.getApplicationContext().getBean(TextTools.class);
+
     @JsonProperty("result")
     public void setTickerFromJson(Map<String, Double> data)
     {
@@ -24,13 +27,6 @@ public class TickerWrapper
         }
     }
 
-    //TODO: Make separate singleton bean for this function, need to remove expanant from double value, for reading
-
-    public TickerWrapper()
-    {
-        df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
-        df.setMaximumFractionDigits(340); // 340 = DecimalFormat.DOUBLE_FRACTION_DIGITS
-    }
     public double getBid()
     {
         return bid;
@@ -70,9 +66,9 @@ public class TickerWrapper
     public String toString()
     {
         return "TickerWrapper{" +
-                "bid=" + df.format(bid) +
-                ", ask=" + df.format(ask) +
-                ", last=" + df.format(last) +
+                "bid=" + textTools.removeExhibitor(bid) +
+                ", ask=" + textTools.removeExhibitor(ask) +
+                ", last=" + textTools.removeExhibitor(last) +
                 '}';
     }
 
@@ -84,6 +80,5 @@ public class TickerWrapper
 
     private double bid, ask, last;
 
-    private DecimalFormat df;
     private static final Logger log = LoggerFactory.getLogger(TickerWrapper.class);
 }

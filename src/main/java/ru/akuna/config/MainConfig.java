@@ -10,6 +10,7 @@ import ru.akuna.msg.MessageProvider;
 import ru.akuna.msg.impls.MsgProperties;
 import ru.akuna.msg.impls.TelegramMessageProvider;
 import ru.akuna.providers.ApplicationContextProvider;
+import ru.akuna.tools.TextTools;
 
 import java.util.Properties;
 
@@ -47,6 +48,12 @@ public class MainConfig
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
         return builder.build();
+    }
+
+    @Bean
+    public TextTools textTools()
+    {
+        return new TextTools();
     }
 
     @Bean
