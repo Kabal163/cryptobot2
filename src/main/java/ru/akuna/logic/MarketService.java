@@ -4,10 +4,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
-import ru.akuna.wrappers.OrderBookWrapper;
-import ru.akuna.wrappers.TickerWrapper;
+import ru.akuna.BittrexUrls;
+import ru.akuna.dto.MarketSummariesWrapper;
+import ru.akuna.dto.MarketWrapper;
+import ru.akuna.dto.OrderBookWrapper;
+import ru.akuna.dto.TickerWrapper;
 
 import java.text.MessageFormat;
+import java.util.Collection;
 
 import static ru.akuna.BittrexUrls.GET_ORDER_BOOK;
 import static ru.akuna.BittrexUrls.GET_TICKER;
@@ -24,6 +28,11 @@ public class MarketService
         OrderBookWrapper orderBook = getOrderBook(market);
 
         return new MarketJob(ticker, orderBook);
+    }
+
+    public Collection<MarketWrapper> getAllMarkets()
+    {
+        return restTemplate.getForObject(BittrexUrls.GET_MARKET_SUMMARIES, MarketSummariesWrapper.class).getMarketWrappers();
     }
 
     private OrderBookWrapper getOrderBook(String market)

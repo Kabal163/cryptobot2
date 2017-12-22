@@ -1,4 +1,4 @@
-package ru.akuna.wrappers;
+package ru.akuna.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

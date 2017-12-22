@@ -12,4 +12,6 @@ public interface BittrexUrls
     String GET_TICKER = "https://bittrex.com/api/v1.1/public/getticker?market={0}";
 
     String GET_ORDER_BOOK = "https://bittrex.com/api/v1.1/public/getorderbook?market={0}&type=both";
+
+    String GET_MARKET_SUMMARIES = "https://bittrex.com/api/v1.1/public/getmarketsummaries";
 }

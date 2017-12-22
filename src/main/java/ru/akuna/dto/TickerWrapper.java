@@ -1,20 +1,15 @@
-package ru.akuna.wrappers;
+package ru.akuna.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import ru.akuna.providers.ApplicationContextProvider;
-import ru.akuna.tools.TextTools;
 
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class TickerWrapper
 {
-    @Autowired
-    private TextTools textTools = ApplicationContextProvider.getApplicationContext().getBean(TextTools.class);
 
     @JsonProperty("result")
     public void setTickerFromJson(Map<String, Double> data)
@@ -66,9 +61,11 @@ public class TickerWrapper
     public String toString()
     {
         return "TickerWrapper{" +
-                "bid=" + textTools.removeExhibitor(bid) +
-                ", ask=" + textTools.removeExhibitor(ask) +
-                ", last=" + textTools.removeExhibitor(last) +
+                "message='" + message + '\'' +
+                ", success=" + success +
+                ", bid=" + bid +
+                ", ask=" + ask +
+                ", last=" + last +
                 '}';
     }
 

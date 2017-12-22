@@ -7,9 +7,12 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import ru.akuna.dto.MarketWrapper;
 import ru.akuna.logic.MarketService;
 import ru.akuna.msg.MessageProvider;
 import ru.akuna.providers.ApplicationContextProvider;
+
+import java.util.Collection;
 
 /**
  * Created by Los Pepes on 12/9/2017.
@@ -32,7 +35,17 @@ public class Application
         return args -> {
             sayHelllllo();
 
-            marketService.createMarketJob(TopMarkets.USDT2BTC.toString()).start();
+/*            marketService.createMarketJob(TopMarkets.USDT2BTC.toString()).start();*/
+
+            Collection<MarketWrapper> marketWrappers = marketService.getAllMarkets();
+
+            for (MarketWrapper marketWrapper : marketWrappers)
+            {
+                System.out.println(marketWrapper.toString());
+            }
+
+
+
         };
     }
 
