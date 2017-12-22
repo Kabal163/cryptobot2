@@ -3,6 +3,8 @@ package ru.akuna.tools.properties;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+
 /**
  * Created by Los Pepes on 12/23/2017.
  */
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Component;
 public class PumpStrategyProperties extends AbstractApplicationProperties
 {
     @Override
+    @PostConstruct
     public void init()
     {
         setPath(PATH);

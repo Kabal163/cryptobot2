@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 public class MsgProperties extends AbstractApplicationProperties
 {
     @Override
+    @PostConstruct
     public void init()
     {
         setPath(PATH);

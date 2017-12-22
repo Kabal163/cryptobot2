@@ -22,7 +22,7 @@ public class FastGrowthBasedOnPumpStrategy
     public void run()
     {
         lifeStatistics = new LinkedList();
-        int controlPointsNumber = properties.getIntProperty("control_points_number");
+        int controlPointsNumber = pumpStrategyProperties.getIntProperty("control_points_number");
 
 
     }
@@ -37,9 +37,8 @@ public class FastGrowthBasedOnPumpStrategy
 
     }
 
-    @Resource
-    @Qualifier("PumpStrategyProperties")
-    private ApplicationProperties properties;
+    @Autowired
+    private ApplicationProperties pumpStrategyProperties;
 
     @Autowired
     private ExecutorService executorService;

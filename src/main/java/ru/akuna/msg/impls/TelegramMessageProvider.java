@@ -23,9 +23,9 @@ public class TelegramMessageProvider implements MessageProvider
     @Override
     public boolean sendMessage(String message)
     {
-        String token = properties.getProperty("msg.telegram.token");
-        String chat_id = properties.getProperty("msg.telegram.chat_id");
-        String url = properties.getProperty("msg.telegram.url");
+        String token = msgProperties.getProperty("msg.telegram.token");
+        String chat_id = msgProperties.getProperty("msg.telegram.chat_id");
+        String url = msgProperties.getProperty("msg.telegram.url");
         String method = "/sendMessage?";
         String param1 = "chat_id=";
         String param2 = "&text=";
@@ -35,9 +35,8 @@ public class TelegramMessageProvider implements MessageProvider
         return false;
     }
 
-    @Resource
-    @Qualifier("MsgProperties")
-    private ApplicationProperties properties;
+    @Autowired
+    private ApplicationProperties msgProperties;
 
     @Autowired
     private RestTemplate restTemplate;
