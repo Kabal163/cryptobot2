@@ -11,7 +11,7 @@ import ru.akuna.dto.OrderBookWrapper;
 import ru.akuna.dto.TickerWrapper;
 
 import java.text.MessageFormat;
-import java.util.Collection;
+import java.util.List;
 
 import static ru.akuna.BittrexUrls.GET_ORDER_BOOK;
 import static ru.akuna.BittrexUrls.GET_TICKER;
@@ -30,7 +30,7 @@ public class MarketService
         return new MarketJob(ticker, orderBook);
     }
 
-    public Collection<MarketWrapper> getAllMarkets()
+    public List<MarketWrapper> getAllMarkets()
     {
         return restTemplate.getForObject(BittrexUrls.GET_MARKET_SUMMARIES, MarketSummariesWrapper.class).getMarketWrappers();
     }

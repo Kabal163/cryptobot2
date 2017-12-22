@@ -3,7 +3,7 @@ package ru.akuna.dto;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.Collection;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MarketSummariesWrapper
@@ -16,7 +16,7 @@ public class MarketSummariesWrapper
 
 
     @JsonProperty("result")
-    private Collection<MarketWrapper> marketWrappers;
+    private List<MarketWrapper> marketWrappers;
 
     public boolean isSuccess()
     {
@@ -38,12 +38,12 @@ public class MarketSummariesWrapper
         this.message = message;
     }
 
-    public Collection<MarketWrapper> getMarketWrappers()
+    public List<MarketWrapper> getMarketWrappers()
     {
         return marketWrappers;
     }
 
-    public void setMarketWrappers(Collection<MarketWrapper> marketWrappers)
+    public void setMarketWrappers(List<MarketWrapper> marketWrappers)
     {
         this.marketWrappers = marketWrappers;
     }

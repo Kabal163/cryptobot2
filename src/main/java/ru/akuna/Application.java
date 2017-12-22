@@ -11,8 +11,12 @@ import ru.akuna.dto.MarketWrapper;
 import ru.akuna.logic.MarketService;
 import ru.akuna.msg.MessageProvider;
 import ru.akuna.providers.ApplicationContextProvider;
+import ru.akuna.task.MarketTask;
+import ru.akuna.tools.MathTools;
+import ru.akuna.tools.TextTools;
 
-import java.util.Collection;
+import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 
 /**
  * Created by Los Pepes on 12/9/2017.
@@ -24,6 +28,12 @@ public class Application
 
     @Autowired
     private MarketService marketService;
+
+    @Autowired
+    private TextTools textTools;
+
+    @Autowired
+    private MathTools mathTools;
 
     public static void main(String[] args)
     {
@@ -37,15 +47,27 @@ public class Application
 
 /*            marketService.createMarketJob(TopMarkets.USDT2BTC.toString()).start();*/
 
-            Collection<MarketWrapper> marketWrappers = marketService.getAllMarkets();
+            List<MarketWrapper> marketWrappers = marketService.getAllMarkets();
 
-            for (MarketWrapper marketWrapper : marketWrappers)
+            log.info("Start Analysis");
+
+            //Для теста перфоманса без форк джоина, можно ориентироваться по Finish Analysis
+ /*           for (MarketWrapper marketWrapper : marketWrappers)
             {
-                System.out.println(marketWrapper.toString());
-            }
+                marketWrapper.testPerformance();
+            }*/
 
 
+            ForkJoinPool forkJoinPool = new ForkJoinPool(10);
+            MarketTask task = new MarketTask(marketWrappers);
+            forkJoinPool.invoke(task);
 
+
+            //Пока что в текущем варианте по этому логу нельзя ориентироваться в случае многопоточности, так как главный тред продолжает работать и не ждет форка
+            log.info("Finish Analysis");
+
+            //Нужен, чтобы Main Thread не закончился, пока как WA
+            Thread.sleep(100000);
         };
     }
 

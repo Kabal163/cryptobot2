@@ -2,6 +2,8 @@ package ru.akuna.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MarketWrapper
@@ -58,6 +60,17 @@ public class MarketWrapper
         this.marketName = marketName;
     }
 
+    public void testPerformance()
+    {
+        for (int i = 0; i < 99999999; i ++)
+        {
+            if (i == 99999998)
+            {
+                log.info("Market: " + getMarketName() + " finished analysis.");
+            }
+        }
+    }
+
     @Override
     public String toString()
     {
@@ -68,4 +81,7 @@ public class MarketWrapper
                 ", marketName='" + marketName + '\'' +
                 '}';
     }
+
+    private static final Logger log = LoggerFactory.getLogger(MarketWrapper.class);
+
 }
