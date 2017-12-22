@@ -6,7 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MarketWrapper
+public class Market
 {
     @JsonProperty("Last")
     private double last;
@@ -74,7 +74,7 @@ public class MarketWrapper
     @Override
     public String toString()
     {
-        return "MarketWrapper{" +
+        return "Market{" +
                 "last=" + last +
                 ", bid=" + bid +
                 ", ask=" + ask +
@@ -82,6 +82,6 @@ public class MarketWrapper
                 '}';
     }
 
-    private static final Logger log = LoggerFactory.getLogger(MarketWrapper.class);
+    private static final Logger log = LoggerFactory.getLogger(Market.class);
 
 }

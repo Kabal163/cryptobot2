@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 import ru.akuna.BittrexUrls;
-import ru.akuna.dto.MarketSummariesWrapper;
-import ru.akuna.dto.MarketWrapper;
+import ru.akuna.dto.MarketSummaries;
+import ru.akuna.dto.Market;
 import ru.akuna.dto.OrderBookWrapper;
 import ru.akuna.dto.TickerWrapper;
 
@@ -30,9 +30,9 @@ public class MarketService
         return new MarketJob(ticker, orderBook);
     }
 
-    public List<MarketWrapper> getAllMarkets()
+    public List<Market> getAllMarkets()
     {
-        return restTemplate.getForObject(BittrexUrls.GET_MARKET_SUMMARIES, MarketSummariesWrapper.class).getMarketWrappers();
+        return restTemplate.getForObject(BittrexUrls.GET_MARKET_SUMMARIES, MarketSummaries.class).getMarkets();
     }
 
     private OrderBookWrapper getOrderBook(String market)
