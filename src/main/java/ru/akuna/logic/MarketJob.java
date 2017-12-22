@@ -18,7 +18,7 @@ public class MarketJob
         log.info(tickerWrapper.toString());
         log.info(orderBook.toString());
 
-        log.info("MarketWrapper Job have been started to scanning market");
+        log.info("Market Job have been started to scanning market");
     }
 
     private static final Logger log = LoggerFactory.getLogger(MarketJob.class);

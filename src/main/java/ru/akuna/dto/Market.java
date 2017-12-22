@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MarketWrapper
+public class Market
 {
     @JsonProperty("Last")
     private double last;
@@ -61,7 +61,7 @@ public class MarketWrapper
     @Override
     public String toString()
     {
-        return "MarketWrapper{" +
+        return "Market{" +
                 "last=" + last +
                 ", bid=" + bid +
                 ", ask=" + ask +

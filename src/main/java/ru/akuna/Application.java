@@ -7,7 +7,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import ru.akuna.dto.MarketWrapper;
+import ru.akuna.dto.Market;
 import ru.akuna.logic.MarketService;
 import ru.akuna.msg.MessageProvider;
 import ru.akuna.providers.ApplicationContextProvider;
@@ -37,11 +37,11 @@ public class Application
 
 /*            marketService.createMarketJob(TopMarkets.USDT2BTC.toString()).start();*/
 
-            Collection<MarketWrapper> marketWrappers = marketService.getAllMarkets();
+            Collection<Market> markets = marketService.getAllMarkets();
 
-            for (MarketWrapper marketWrapper : marketWrappers)
+            for (Market market : markets)
             {
-                System.out.println(marketWrapper.toString());
+                System.out.println(market.toString());
             }
 
 

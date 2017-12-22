@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.Collection;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MarketSummariesWrapper
+public class MarketSummaries
 {
     @JsonProperty("success")
     private boolean success;
@@ -16,7 +16,7 @@ public class MarketSummariesWrapper
 
 
     @JsonProperty("result")
-    private Collection<MarketWrapper> marketWrappers;
+    private Collection<Market> markets;
 
     public boolean isSuccess()
     {
@@ -38,13 +38,13 @@ public class MarketSummariesWrapper
         this.message = message;
     }
 
-    public Collection<MarketWrapper> getMarketWrappers()
+    public Collection<Market> getMarkets()
     {
-        return marketWrappers;
+        return markets;
     }
 
-    public void setMarketWrappers(Collection<MarketWrapper> marketWrappers)
+    public void setMarkets(Collection<Market> markets)
     {
-        this.marketWrappers = marketWrappers;
+        this.markets = markets;
     }
 }
