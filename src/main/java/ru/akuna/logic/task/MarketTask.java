@@ -64,7 +64,6 @@ public class MarketTask extends RecursiveAction
         {
             if (isPriceGetBiggerOnPercent(oldLastPrice, currentLastPrice, 5.0))
             {
-                System.out.println("SEND MESSAGE");
                 sendMessage(marketName, oldLastPrice, currentLastPrice);
             }
         }
@@ -77,20 +76,13 @@ public class MarketTask extends RecursiveAction
         double percent = (currentLastPrice - oldLast) / oldLast * 100;
 
         ApplicationContext context = ApplicationContextProvider.getApplicationContext();
-        System.out.println("CONTEXT HAS BEEN RECEIVED");
         synchronized (context)
         {
             MessageProvider telegramMessageProvider = (MessageProvider) context.getBean("telegramMessageProvider");
-
-            System.out.println("MSG PROVIDER HAS BEEN RECEIVED");
             telegramMessageProvider.sendMessage("Market: " + marketName + " has increased price by: " + percent + "%\n" +
                     "Old price: " + textTools.removeExhibitor(oldLast) + "\n" +
                     "New price: " + textTools.removeExhibitor(currentLastPrice));
         }
-
-        /*log.info("Market: " + marketName + " has increased price by: " + percent + "%");
-        log.info("Old price: " + textTools.removeExhibitor(oldLast));
-        log.info("New price: " + textTools.removeExhibitor(currentLastPrice));*/
     }
 
     private boolean isPriceGetBiggerOnPercent(Double oldLastPrice, Double currentLastPrice, Double percent)
