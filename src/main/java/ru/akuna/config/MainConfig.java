@@ -7,9 +7,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.client.RestTemplate;
 import ru.akuna.logic.MarketService;
-import ru.akuna.msg.MessageProvider;
-import ru.akuna.tools.properties.MsgProperties;
-import ru.akuna.msg.impls.TelegramMessageProvider;
 import ru.akuna.providers.ApplicationContextProvider;
 import ru.akuna.tools.MathTools;
 import ru.akuna.tools.TextTools;
@@ -47,7 +44,6 @@ public class MainConfig
     {
         return new TextTools();
     }
-
 
     @Bean
     public MathTools mathTools()

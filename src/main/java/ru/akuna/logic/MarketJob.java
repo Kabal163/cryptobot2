@@ -3,7 +3,7 @@ package ru.akuna.logic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import ru.akuna.dto.Market;
-import ru.akuna.task.MarketTask;
+import ru.akuna.logic.task.MarketTask;
 
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
@@ -34,7 +34,6 @@ public class MarketJob
         forkJoinPool.invoke(task);
         phaser.arriveAndAwaitAdvance();
 
-        //Пока что в текущем варианте по этому логу нельзя ориентироваться в случае многопоточности, так как главный тред продолжает работать и не ждет форка
         log.info("Finish Analysis");
     }
 
