@@ -6,6 +6,7 @@ import org.slf4j.LoggerFactory;
 import ru.akuna.dto.Market;
 
 import java.util.List;
+import java.util.concurrent.Phaser;
 import java.util.concurrent.RecursiveAction;
 
 public class MarketTask extends RecursiveAction
@@ -13,10 +14,13 @@ public class MarketTask extends RecursiveAction
     private static final Logger log = LoggerFactory.getLogger(MarketTask.class);
 
     private List<Market> markets;
+    private Phaser phaser;
 
-    public MarketTask(List<Market> markets)
+    public MarketTask(List<Market> markets, Phaser phaser)
     {
         this.markets = markets;
+        this.phaser = phaser;
+        phaser.register();
     }
 
     @Override
@@ -33,6 +37,8 @@ public class MarketTask extends RecursiveAction
                 market.testPerformance();
             }
         }
+
+        phaser.arrive();
     }
 
     private void createSubTasks()
@@ -43,7 +49,8 @@ public class MarketTask extends RecursiveAction
 
         for (List<Market> subList : subLists)
         {
-            new MarketTask(subList).fork();
+            MarketTask task = new MarketTask(subList, phaser);
+            task.fork();
         }
     }
 }

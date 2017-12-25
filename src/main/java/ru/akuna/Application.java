@@ -16,6 +16,7 @@ import ru.akuna.tools.properties.ApplicationProperties;
 
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Phaser;
 
 /**
  * Created by Los Pepes on 12/9/2017.
@@ -46,27 +47,34 @@ public class Application
     public CommandLineRunner run() throws Exception {
         return args -> {
 
-            List<Market> marketWrappers = marketService.getAllMarkets();
+            launchMarketServiceTask();
 
-            log.info("Start Analysis");
+            System.out.println(pumpStrategyProperties.getProperty("control_points_number"));
 
-            //Для теста перфоманса без форк джоина, можно ориентироваться по логу Finish Analysis
+        };
+    }
+
+    private void launchMarketServiceTask()
+    {
+        List<Market> marketWrappers = marketService.getAllMarkets();
+
+        log.info("Start Analysis");
+
+        //Для теста перфоманса без форк джоина
  /*           for (MarketWrapper marketWrapper : marketWrappers)
             {
                 marketWrapper.testPerformance();
             }*/
 
-            ForkJoinPool forkJoinPool = new ForkJoinPool(10);
-            MarketTask task = new MarketTask(marketWrappers);
-            forkJoinPool.invoke(task);
+        ForkJoinPool forkJoinPool = new ForkJoinPool();
 
-            //Пока что в текущем варианте по этому логу нельзя ориентироваться в случае многопоточности, так как главный тред продолжает работать и не ждет форка
-            log.info("Finish Analysis");
+        Phaser phaser = new Phaser();
+        MarketTask task = new MarketTask(marketWrappers, phaser);
+        phaser.register();
+        forkJoinPool.invoke(task);
+        phaser.arriveAndAwaitAdvance();
 
-            System.out.println(pumpStrategyProperties.getProperty("control_points_number"));
-
-            //Нужен, чтобы Main Thread не закончился, пока как WA
-            Thread.sleep(100000);
-        };
+        //Пока что в текущем варианте по этому логу нельзя ориентироваться в случае многопоточности, так как главный тред продолжает работать и не ждет форка
+        log.info("Finish Analysis");
     }
 }
