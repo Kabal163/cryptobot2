@@ -2,27 +2,41 @@ package ru.akuna.logic;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import ru.akuna.dto.OrderBookWrapper;
-import ru.akuna.dto.TickerWrapper;
+import ru.akuna.dto.Market;
+import ru.akuna.task.MarketTask;
+
+import java.util.List;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.Phaser;
 
 public class MarketJob
 {
-    public MarketJob(TickerWrapper tickerWrapper, OrderBookWrapper orderBook)
+    private List<Market> markets;
+
+    public MarketJob(List<Market> markets)
     {
-        this.tickerWrapper = tickerWrapper;
-        this.orderBook = orderBook;
+        this.markets = markets;
     }
 
     public void start()
     {
-        log.info(tickerWrapper.toString());
-        log.info(orderBook.toString());
+        log.info("Start Analysis");
 
-        log.info("Market Job have been started to scanning market");
+        //Для теста перфоманса без форк джоина
+ /*           for (MarketWrapper marketWrapper : marketWrappers)
+            {
+                marketWrapper.testPerformance();
+            }*/
+        ForkJoinPool forkJoinPool = new ForkJoinPool();
+        Phaser phaser = new Phaser();
+        MarketTask task = new MarketTask(markets, phaser);
+        phaser.register();
+        forkJoinPool.invoke(task);
+        phaser.arriveAndAwaitAdvance();
+
+        //Пока что в текущем варианте по этому логу нельзя ориентироваться в случае многопоточности, так как главный тред продолжает работать и не ждет форка
+        log.info("Finish Analysis");
     }
 
     private static final Logger log = LoggerFactory.getLogger(MarketJob.class);
-
-    private TickerWrapper tickerWrapper;
-    private OrderBookWrapper orderBook;
 }

@@ -5,8 +5,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
 import ru.akuna.BittrexUrls;
-import ru.akuna.dto.MarketSummaries;
 import ru.akuna.dto.Market;
+import ru.akuna.dto.MarketSummaries;
 import ru.akuna.dto.OrderBookWrapper;
 import ru.akuna.dto.TickerWrapper;
 
@@ -22,12 +22,9 @@ public class MarketService
     @Autowired
     private RestTemplate restTemplate;
 
-    public MarketJob createMarketJob(String market)
+    public MarketJob createMarketJob()
     {
-        TickerWrapper ticker = getTicker(market);
-        OrderBookWrapper orderBook = getOrderBook(market);
-
-        return new MarketJob(ticker, orderBook);
+        return new MarketJob(getAllMarkets());
     }
 
     public List<Market> getAllMarkets()
