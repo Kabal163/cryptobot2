@@ -22,10 +22,10 @@ public class MarketJob
     {
         log.info("Start Analysis");
 
-        //Для теста перфоманса без форк джоина
- /*           for (MarketWrapper marketWrapper : marketWrappers)
+        //Для теста перфоманса без форк джоина, остальное ниже закоментить
+/*            for (Market market : markets)
             {
-                marketWrapper.testPerformance();
+                market.testPerformance();
             }*/
         ForkJoinPool forkJoinPool = new ForkJoinPool();
         Phaser phaser = new Phaser();
