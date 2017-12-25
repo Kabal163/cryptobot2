@@ -5,8 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Observer;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Market
+public class Market extends Model<Market>
 {
     @JsonProperty("Last")
     private double last;
@@ -69,6 +73,12 @@ public class Market
                 log.info("Market: " + getMarketName() + " finished analysis.");
             }
         }
+    }
+
+    @Override
+    public void notifyObservers()
+    {
+        getObservers().forEach(o -> o.update(this));
     }
 
     @Override

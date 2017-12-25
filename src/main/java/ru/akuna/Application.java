@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import ru.akuna.dto.Market;
 import ru.akuna.logic.MarketService;
-import ru.akuna.task.MarketTask;
+import ru.akuna.cuncurrency.StrategyFork;
 import ru.akuna.tools.MathTools;
 import ru.akuna.tools.TextTools;
 import ru.akuna.tools.properties.ApplicationProperties;
@@ -56,8 +56,8 @@ public class Application
                 marketWrapper.testPerformance();
             }*/
 
-            ForkJoinPool forkJoinPool = new ForkJoinPool(10);
-            MarketTask task = new MarketTask(marketWrappers);
+            ForkJoinPool forkJoinPool = new ForkJoinPool(15);
+            StrategyFork task = new StrategyFork(marketWrappers);
             forkJoinPool.invoke(task);
 
             //Пока что в текущем варианте по этому логу нельзя ориентироваться в случае многопоточности, так как главный тред продолжает работать и не ждет форка

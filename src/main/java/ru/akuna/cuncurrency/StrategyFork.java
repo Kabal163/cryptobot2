@@ -1,4 +1,4 @@
-package ru.akuna.task;
+package ru.akuna.cuncurrency;
 
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
@@ -8,13 +8,9 @@ import ru.akuna.dto.Market;
 import java.util.List;
 import java.util.concurrent.RecursiveAction;
 
-public class MarketTask extends RecursiveAction
+public class StrategyFork extends RecursiveAction
 {
-    private static final Logger log = LoggerFactory.getLogger(MarketTask.class);
-
-    private List<Market> markets;
-
-    public MarketTask(List<Market> markets)
+    public StrategyFork(List<Market> markets)
     {
         this.markets = markets;
     }
@@ -22,7 +18,7 @@ public class MarketTask extends RecursiveAction
     @Override
     protected void compute()
     {
-        if (markets.size() >= 2)
+        if (markets.size() >= 4)
         {
             createSubTasks();
         }
@@ -43,7 +39,10 @@ public class MarketTask extends RecursiveAction
 
         for (List<Market> subList : subLists)
         {
-            new MarketTask(subList).fork();
+            new StrategyFork(subList).fork();
         }
     }
+
+    private static final Logger log = LoggerFactory.getLogger(StrategyFork.class);
+    private List<Market> markets;
 }
