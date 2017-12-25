@@ -7,17 +7,20 @@ import ru.akuna.dto.Market;
 import ru.akuna.tools.MathTools;
 import ru.akuna.tools.TextTools;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.Phaser;
 import java.util.concurrent.RecursiveAction;
+import java.util.concurrent.locks.Lock;
 
-import static ru.akuna.Application.market2last;
 
 public class MarketTask extends RecursiveAction
 {
     private static final Logger log = LoggerFactory.getLogger(MarketTask.class);
     private static MathTools mathTools = new MathTools();
     private static TextTools textTools = new TextTools();
+    private static Map<String, Double> market2last = new HashMap<>();
 
     private List<Market> markets;
     private Phaser phaser;
@@ -40,7 +43,6 @@ public class MarketTask extends RecursiveAction
         {
             for (Market market : markets)
             {
-            /*    market.testPerformance();*/
                 doSomeLogic(market);
             }
         }
@@ -52,18 +54,18 @@ public class MarketTask extends RecursiveAction
     {
         // Test strategy
         String marketName = market.getMarketName();
-        Double oldLastPrice = market2last.get(marketName);
+        Double oldLastPrice = getResultValue(marketName);
         Double currentLastPrice = market.getLast();
 
         if (oldLastPrice != null)
         {
-            if (isPriceGetBiggerOnPercent(oldLastPrice, currentLastPrice, 0.5))
+            if (isPriceGetBiggerOnPercent(oldLastPrice, currentLastPrice, 3.0))
             {
                 sendMessage(marketName, oldLastPrice, currentLastPrice);
             }
         }
 
-        market2last.put(marketName, currentLastPrice);
+        addResult(marketName, currentLastPrice);
     }
 
     private void sendMessage(String marketName, Double oldLast, Double currentLastPrice)
@@ -94,4 +96,21 @@ public class MarketTask extends RecursiveAction
             task.fork();
         }
     }
+
+    private Double getResultValue(String marketName)
+    {
+        synchronized (market2last)
+        {
+            return market2last.get(marketName);
+        }
+    }
+
+    private void addResult(String marketName, Double currency)
+    {
+        synchronized (market2last)
+        {
+            market2last.put(marketName, currency);
+        }
+    }
+
 }

@@ -14,6 +14,7 @@ import ru.akuna.tools.TextTools;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadFactory;
 
 /**
@@ -28,11 +29,11 @@ public class MainConfig
         return new Properties();
     }
 
-    @Bean
-    public MarketService marketService()
-    {
-        return new MarketService();
-    }
+    //@Bean
+    //public MarketService marketService()
+    //{
+    //    return new MarketService();
+    //}
 
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
@@ -65,5 +66,11 @@ public class MainConfig
                 .setDaemon(true)
                 .build();
         return Executors.newFixedThreadPool(48, threadFactory);
+    }
+
+    @Bean
+    public ScheduledExecutorService scheduledExecutorService()
+    {
+        return Executors.newScheduledThreadPool(2);
     }
 }
