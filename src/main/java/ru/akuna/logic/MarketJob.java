@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.akuna.dto.Market;
 import ru.akuna.logic.task.MarketTask;
+import ru.akuna.msg.MessageProvider;
 
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;

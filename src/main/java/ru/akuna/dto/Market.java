@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Observer;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Market extends Model<Market>
+public class Market
 {
     @JsonProperty("Last")
     private double last;
@@ -73,12 +73,6 @@ public class Market extends Model<Market>
                 log.info("Market: " + getMarketName() + " finished analysis.");
             }
         }
-    }
-
-    @Override
-    public void notifyObservers()
-    {
-        getObservers().forEach(o -> o.update(this));
     }
 
     @Override

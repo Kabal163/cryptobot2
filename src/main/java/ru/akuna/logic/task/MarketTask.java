@@ -3,7 +3,10 @@ package ru.akuna.logic.task;
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 import ru.akuna.dto.Market;
+import ru.akuna.msg.MessageProvider;
+import ru.akuna.providers.ApplicationContextProvider;
 import ru.akuna.tools.MathTools;
 import ru.akuna.tools.TextTools;
 
@@ -35,7 +38,7 @@ public class MarketTask extends RecursiveAction
     @Override
     protected void compute()
     {
-        if (markets.size() >= 2)
+        if (markets.size() > 2)
         {
             createSubTasks();
         }
@@ -59,8 +62,9 @@ public class MarketTask extends RecursiveAction
 
         if (oldLastPrice != null)
         {
-            if (isPriceGetBiggerOnPercent(oldLastPrice, currentLastPrice, 3.0))
+            if (isPriceGetBiggerOnPercent(oldLastPrice, currentLastPrice, 5.0))
             {
+                System.out.println("SEND MESSAGE");
                 sendMessage(marketName, oldLastPrice, currentLastPrice);
             }
         }
@@ -72,9 +76,21 @@ public class MarketTask extends RecursiveAction
     {
         double percent = (currentLastPrice - oldLast) / oldLast * 100;
 
-        log.info("Market: " + marketName + " has increased price by: " + percent + "%");
+        ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+        System.out.println("CONTEXT HAS BEEN RECEIVED");
+        synchronized (context)
+        {
+            MessageProvider telegramMessageProvider = (MessageProvider) context.getBean("telegramMessageProvider");
+
+            System.out.println("MSG PROVIDER HAS BEEN RECEIVED");
+            telegramMessageProvider.sendMessage("Market: " + marketName + " has increased price by: " + percent + "%\n" +
+                    "Old price: " + textTools.removeExhibitor(oldLast) + "\n" +
+                    "New price: " + textTools.removeExhibitor(currentLastPrice));
+        }
+
+        /*log.info("Market: " + marketName + " has increased price by: " + percent + "%");
         log.info("Old price: " + textTools.removeExhibitor(oldLast));
-        log.info("New price: " + textTools.removeExhibitor(currentLastPrice));
+        log.info("New price: " + textTools.removeExhibitor(currentLastPrice));*/
     }
 
     private boolean isPriceGetBiggerOnPercent(Double oldLastPrice, Double currentLastPrice, Double percent)

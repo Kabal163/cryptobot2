@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import ru.akuna.msg.MessageProvider;
@@ -17,7 +18,7 @@ import javax.annotation.Resource;
  */
 @Component
 @Scope("prototype")
-@Qualifier("TelegramMessageProvider")
+@EnableAsync
 public class TelegramMessageProvider implements MessageProvider
 {
     @Override

@@ -6,11 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import ru.akuna.logic.MarketJob;
 import ru.akuna.logic.MarketService;
+import ru.akuna.providers.ApplicationContextProvider;
 import ru.akuna.tools.MathTools;
 import ru.akuna.tools.properties.ApplicationProperties;
 
@@ -32,10 +35,10 @@ public class Application
     private static final Logger log = LoggerFactory.getLogger(Application.class);
 
     @Autowired
-    private ScheduledExecutorService scheduledExecutorService;
+    private MarketService marketService;
 
     @Autowired
-    private MarketService marketService;
+    private ApplicationContextProvider provider;
 
     public static void main(String[] args)
     {

@@ -12,10 +12,7 @@ import ru.akuna.tools.MathTools;
 import ru.akuna.tools.TextTools;
 
 import java.util.Properties;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.*;
 
 /**
  * Created by Los Pepes on 12/16/2017.
@@ -28,12 +25,6 @@ public class MainConfig
     public Properties properties(){
         return new Properties();
     }
-
-    //@Bean
-    //public MarketService marketService()
-    //{
-    //    return new MarketService();
-    //}
 
     @Bean
     public RestTemplate restTemplate(RestTemplateBuilder builder) {
@@ -58,19 +49,10 @@ public class MainConfig
         return new ApplicationContextProvider();
     }
 
-    @Bean
-    public ExecutorService executorService()
+    @Bean(destroyMethod="shutdown")
+    public Executor scheduledExecutorService()
     {
-        ThreadFactory threadFactory = new ThreadFactoryBuilder()
-                .setNameFormat("SomeName of Thread") //todo implement thread naming
-                .setDaemon(true)
-                .build();
-        return Executors.newFixedThreadPool(48, threadFactory);
+        return Executors.newScheduledThreadPool(10);
     }
 
-    @Bean
-    public ScheduledExecutorService scheduledExecutorService()
-    {
-        return Executors.newScheduledThreadPool(2);
-    }
 }
