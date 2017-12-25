@@ -7,15 +7,13 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import ru.akuna.dto.Market;
+import ru.akuna.logic.MarketJob;
 import ru.akuna.logic.MarketService;
-import ru.akuna.cuncurrency.StrategyFork;
 import ru.akuna.tools.MathTools;
-import ru.akuna.tools.TextTools;
 import ru.akuna.tools.properties.ApplicationProperties;
 
-import java.util.List;
-import java.util.concurrent.ForkJoinPool;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Los Pepes on 12/9/2017.
@@ -24,18 +22,18 @@ import java.util.concurrent.ForkJoinPool;
 public class Application
 {
     private static final Logger log = LoggerFactory.getLogger(Application.class);
+    public static Map<String, Double> market2ask = new HashMap<>();
+    public static Map<String, Double> market2bid = new HashMap<>();
+    public static Map<String, Double> market2last = new HashMap<>();
 
     @Autowired
     private ApplicationProperties pumpStrategyProperties;
 
     @Autowired
-    private MarketService marketService;
-
-    @Autowired
-    private TextTools textTools;
-
-    @Autowired
     private MathTools mathTools;
+
+    @Autowired
+    private MarketService marketService;
 
     public static void main(String[] args)
     {
@@ -46,27 +44,15 @@ public class Application
     public CommandLineRunner run() throws Exception {
         return args -> {
 
-            List<Market> marketWrappers = marketService.getAllMarkets();
+            MarketJob marketJob = marketService.createMarketJob();
 
-            log.info("Start Analysis");
-
-            //Для теста перфоманса без форк джоина, можно ориентироваться по логу Finish Analysis
- /*           for (MarketWrapper marketWrapper : marketWrappers)
+            while (true)
             {
-                marketWrapper.testPerformance();
-            }*/
+                marketJob.start();
+                Thread.sleep(30000);
+            }
 
-            ForkJoinPool forkJoinPool = new ForkJoinPool(15);
-            StrategyFork task = new StrategyFork(marketWrappers);
-            forkJoinPool.invoke(task);
-
-            //Пока что в текущем варианте по этому логу нельзя ориентироваться в случае многопоточности, так как главный тред продолжает работать и не ждет форка
-            log.info("Finish Analysis");
-
-            System.out.println(pumpStrategyProperties.getProperty("control_points_number"));
-
-            //Нужен, чтобы Main Thread не закончился, пока как WA
-            Thread.sleep(100000);
+         /*   System.out.println(pumpStrategyProperties.getProperty("control_points_number"));*/
         };
     }
 }
