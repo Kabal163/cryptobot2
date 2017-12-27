@@ -42,6 +42,11 @@ public abstract class AbstractApplicationProperties implements ApplicationProper
         return Integer.parseInt(properties.getProperty(key));
     }
 
+    public long getLongProperty(String key)
+    {
+        return Long.parseLong(properties.getProperty(key));
+    }
+
     private void tryToFind()
     {
         ClassLoader classLoader = getClass().getClassLoader();

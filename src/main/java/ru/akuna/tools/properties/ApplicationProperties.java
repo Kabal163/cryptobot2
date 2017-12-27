@@ -10,4 +10,6 @@ public interface ApplicationProperties
     String getProperty(String key);
 
     int getIntProperty(String key);
+
+    long getLongProperty(String key);
 }

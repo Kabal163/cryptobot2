@@ -1,33 +1,27 @@
-package ru.akuna.logic.task;
+package ru.akuna.strategy.task;
 
 import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.stereotype.Component;
 import ru.akuna.dto.Market;
-import ru.akuna.msg.MessageProvider;
+import ru.akuna.dto.Ticker;
 import ru.akuna.providers.ApplicationContextProvider;
+import ru.akuna.strategy.job.TickerJob;
+import ru.akuna.tools.JobScheduler;
 import ru.akuna.tools.MathTools;
 import ru.akuna.tools.TextTools;
+import ru.akuna.tools.properties.ApplicationProperties;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Phaser;
 import java.util.concurrent.RecursiveAction;
-import java.util.concurrent.locks.Lock;
-
 
 public class MarketTask extends RecursiveAction
 {
-    private static final Logger log = LoggerFactory.getLogger(MarketTask.class);
-    private static MathTools mathTools = new MathTools();
-    private static TextTools textTools = new TextTools();
-    private static Map<String, Double> market2last = new HashMap<>();
-
-    private List<Market> markets;
-    private Phaser phaser;
-
     public MarketTask(List<Market> markets, Phaser phaser)
     {
         this.markets = markets;
@@ -46,43 +40,57 @@ public class MarketTask extends RecursiveAction
         {
             for (Market market : markets)
             {
-                doSomeLogic(market);
+                start(market);
             }
         }
 
         phaser.arrive();
     }
 
-    private void doSomeLogic(Market market)
+    private void start(Market market)
     {
-        // Test strategy
         String marketName = market.getMarketName();
-        Double oldLastPrice = getResultValue(marketName);
-        Double currentLastPrice = market.getLast();
+        Double lastPrice = getResultValue(marketName);
+        Double currentPrice = market.getLast();
 
-        if (oldLastPrice != null)
+        if (lastPrice != null)
         {
-            if (isPriceGetBiggerOnPercent(oldLastPrice, currentLastPrice, 5.0))
+            if (isPriceGetBiggerOnPercent(lastPrice, currentPrice, 2.0))
             {
-                sendMessage(marketName, oldLastPrice, currentLastPrice);
+                sendMessage(marketName, lastPrice, currentPrice);
+                runTickerJob(market);
             }
         }
 
-        addResult(marketName, currentLastPrice);
+        addResult(marketName, currentPrice);
+    }
+
+    //В случае, если мы находим памп, то скедулим новую джобу, которая уже мониторит конкретную монету
+    private void runTickerJob(Market market)
+    {
+        ApplicationContext context = ApplicationContextProvider.getApplicationContext();
+        JobScheduler jobScheduler = context.getBean("jobScheduler", JobScheduler.class);
+        TickerJob tickerJob = context.getBean("tickerJob", TickerJob.class);
+        ApplicationProperties properties = context.getBean("pumpStrategyProperties", ApplicationProperties.class);
+        tickerJob.setMarket(market);
+        jobScheduler.scheduleAtFixedRate(tickerJob, properties.getLongProperty("ticker_job_time_rate"));
     }
 
     private void sendMessage(String marketName, Double oldLast, Double currentLastPrice)
     {
         double percent = (currentLastPrice - oldLast) / oldLast * 100;
 
-        ApplicationContext context = ApplicationContextProvider.getApplicationContext();
-        synchronized (context)
+        /*synchronized (context)
         {
             MessageProvider telegramMessageProvider = (MessageProvider) context.getBean("telegramMessageProvider");
             telegramMessageProvider.sendMessage("Market: " + marketName + " has increased price by: " + percent + "%\n" +
                     "Old price: " + textTools.removeExhibitor(oldLast) + "\n" +
                     "New price: " + textTools.removeExhibitor(currentLastPrice));
-        }
+        }*/
+
+        LOG.info("Market: " + marketName + " has increased price by: " + percent + "%\n" +
+                "Old price: " + textTools.removeExhibitor(oldLast) + "\n" +
+                "New price: " + textTools.removeExhibitor(currentLastPrice));
     }
 
     private boolean isPriceGetBiggerOnPercent(Double oldLastPrice, Double currentLastPrice, Double percent)
@@ -120,5 +128,13 @@ public class MarketTask extends RecursiveAction
             market2last.put(marketName, currency);
         }
     }
+
+    private static final Logger LOG = LoggerFactory.getLogger(MarketTask.class);
+    private static MathTools mathTools = new MathTools();
+    private static TextTools textTools = new TextTools();
+    private static Map<String, Double> market2last = new HashMap<>();
+
+    private List<Market> markets;
+    private Phaser phaser;
 
 }
