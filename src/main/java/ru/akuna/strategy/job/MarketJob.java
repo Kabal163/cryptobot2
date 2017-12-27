@@ -31,7 +31,4 @@ public class MarketJob implements Runnable
 
     @Autowired
     private MarketService marketService;
-
-    @Autowired
-    private JobScheduler jobScheduler;
 }

@@ -1,7 +1,6 @@
 package ru.akuna.tools;
 
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
-import org.springframework.scheduling.support.ScheduledMethodRunnable;
 import org.springframework.stereotype.Component;
 
 import java.util.IdentityHashMap;

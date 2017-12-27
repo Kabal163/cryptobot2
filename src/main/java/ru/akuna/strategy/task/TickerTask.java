@@ -21,10 +21,15 @@ public class TickerTask
     public String start(Market market)
     {
         Ticker ticker = tickerService.getTicker(market.getMarketName());
-        String diff = "Price increased by " + getDiff(market.getLast(), ticker.getLast());
-        String result = diff + "\n" + taskCounter++ + ". TICKER: ASK = " + ticker.getAsk()
+        if(isFirstTime)lastPrice = market.getLast();
+        taskCounter++;
+        String diff = "Price increased by " + getDiff(lastPrice, ticker.getLast());
+        String result = market.getMarketName() + ": " + diff + ". " + "ASK = " + ticker.getAsk()
                 + ", BID = " + ticker.getBid()
                 + ", LAST = " + ticker.getLast();
+        lastPrice = ticker.getLast();
+        isFirstTime = false;
+
         LOG.info(result);
         return result;
     }
@@ -37,5 +42,7 @@ public class TickerTask
     @Autowired
     private TickerService tickerService;
     private static final Logger LOG = LoggerFactory.getLogger(TickerTask.class);
+    private double lastPrice;
+    private boolean isFirstTime = true;
     private int taskCounter = 0;
 }
