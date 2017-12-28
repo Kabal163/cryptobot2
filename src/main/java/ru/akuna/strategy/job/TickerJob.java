@@ -22,7 +22,8 @@ public class TickerJob implements Runnable
     {
         String ticker = tickerTask.start(market);
         jobCounter++;
-        if(jobCounter == 10)
+
+        if (jobCounter == 10)
         {
             jobScheduler.stopJob(this);
         }
@@ -36,8 +37,10 @@ public class TickerJob implements Runnable
 
     @Autowired
     private TickerTask tickerTask;
+
     @Autowired
     private JobScheduler jobScheduler;
+
     private Market market;
     private int jobCounter = 0;
 }

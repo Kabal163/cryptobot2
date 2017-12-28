@@ -9,8 +9,6 @@ import ru.akuna.dto.Market;
 import ru.akuna.dto.Ticker;
 import ru.akuna.strategy.stockService.TickerService;
 
-import static ru.akuna.tools.MathTools.*;
-
 /**
  * Created by Los Pepes on 12/27/2017.
  */
@@ -21,10 +19,14 @@ public class TickerTask
     public String start(Market market)
     {
         Ticker ticker = tickerService.getTicker(market.getMarketName());
-        if(isFirstTime)lastPrice = market.getLast();
-        taskCounter++;
+
+        if (isFirstTime)
+        {
+            lastPrice = market.getLast();
+        }
+
         String diff = "Price increased by " + getDiff(lastPrice, ticker.getLast());
-        String result = market.getMarketName() + ": " + diff + ". " + "ASK = " + ticker.getAsk()
+        String result = diff + "\n" + taskCounter++ + ". TICKER: ASK = " + ticker.getAsk()
                 + ", BID = " + ticker.getBid()
                 + ", LAST = " + ticker.getLast();
         lastPrice = ticker.getLast();

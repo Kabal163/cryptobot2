@@ -4,9 +4,7 @@ import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.stereotype.Component;
 import ru.akuna.dto.Market;
-import ru.akuna.dto.Ticker;
 import ru.akuna.providers.ApplicationContextProvider;
 import ru.akuna.strategy.job.TickerJob;
 import ru.akuna.tools.JobScheduler;
@@ -14,7 +12,7 @@ import ru.akuna.tools.MathTools;
 import ru.akuna.tools.TextTools;
 import ru.akuna.tools.properties.ApplicationProperties;
 
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Phaser;
@@ -132,7 +130,7 @@ public class MarketTask extends RecursiveAction
     private static final Logger LOG = LoggerFactory.getLogger(MarketTask.class);
     private static MathTools mathTools = new MathTools();
     private static TextTools textTools = new TextTools();
-    private static Map<String, Double> market2last = new HashMap<>();
+    private static Map<String, Double> market2last = new IdentityHashMap<>();
 
     private List<Market> markets;
     private Phaser phaser;

@@ -1,7 +1,5 @@
 package ru.akuna.tools.properties;
 
-import java.util.Properties;
-
 /**
  * Created by Los Pepes on 12/23/2017.
  */
@@ -12,4 +10,6 @@ public interface ApplicationProperties
     int getIntProperty(String key);
 
     long getLongProperty(String key);
+
+    double getDoubleProperty(String key);
 }
