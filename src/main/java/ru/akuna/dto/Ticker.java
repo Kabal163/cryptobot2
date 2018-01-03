@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
 import java.util.Map;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class TickerWrapper
+public class Ticker
 {
 
     @JsonProperty("result")
@@ -60,7 +60,7 @@ public class TickerWrapper
     @Override
     public String toString()
     {
-        return "TickerWrapper{" +
+        return "Ticker{" +
                 "message='" + message + '\'' +
                 ", success=" + success +
                 ", bid=" + bid +
@@ -77,5 +77,5 @@ public class TickerWrapper
 
     private double bid, ask, last;
 
-    private static final Logger log = LoggerFactory.getLogger(TickerWrapper.class);
+    private static final Logger log = LoggerFactory.getLogger(Ticker.class);
 }

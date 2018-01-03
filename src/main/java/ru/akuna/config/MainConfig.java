@@ -1,12 +1,10 @@
 package ru.akuna.config;
 
-import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Scope;
 import org.springframework.web.client.RestTemplate;
-import ru.akuna.logic.MarketService;
 import ru.akuna.providers.ApplicationContextProvider;
 import ru.akuna.tools.MathTools;
 import ru.akuna.tools.TextTools;

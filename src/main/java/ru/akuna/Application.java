@@ -1,45 +1,23 @@
 package ru.akuna;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import ru.akuna.logic.MarketJob;
-import ru.akuna.logic.MarketService;
-import ru.akuna.providers.ApplicationContextProvider;
-import ru.akuna.tools.MathTools;
-import ru.akuna.tools.properties.ApplicationProperties;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.ScheduledExecutorService;
-
-import static java.util.concurrent.TimeUnit.SECONDS;
+import ru.akuna.demo.DemoAccount;
+import ru.akuna.strategy.PumpStrategy;
 
 /**
  * Created by Los Pepes on 12/9/2017.
  */
 @SpringBootApplication
-@EnableAspectJAutoProxy(proxyTargetClass = true)
 @EnableScheduling
+@EnableAspectJAutoProxy(proxyTargetClass = true)
 public class Application
 {
-    private static final Logger log = LoggerFactory.getLogger(Application.class);
-
-    @Autowired
-    private MarketService marketService;
-
-    @Autowired
-    private ApplicationContextProvider provider;
-
     public static void main(String[] args)
     {
         SpringApplication.run(Application.class);
@@ -48,16 +26,22 @@ public class Application
     @Bean
     public CommandLineRunner run() throws Exception {
         return args -> {
+            //Первым делом вызывается стратегия
+       /*     pumpStrategy.run();*/
 
-            /*MarketJob marketJob = marketService.createMarketJob();
+            demoAccount.deposit("LTC", 42.3);
+            demoAccount.deposit("DOGE", 1263000.0);
+            demoAccount.withdraw("LTC", 15.0);
 
-            while (true)
-            {
-                marketJob.start();
-                Thread.sleep(30000);
-            }*/
-
-         /*   System.out.println(pumpStrategyProperties.getProperty("control_points_number"));*/
+            System.out.println(demoAccount.getTotalBalanceInBtc());
+            System.out.println(demoAccount.getChangeOfBalance());
+            System.out.println(demoAccount.getChangeOfBalanceInPercent());
         };
     }
+
+    @Autowired
+    private PumpStrategy pumpStrategy;
+
+    @Autowired
+    private DemoAccount demoAccount;
 }
