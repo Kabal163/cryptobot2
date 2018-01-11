@@ -20,18 +20,31 @@ public class TickerJob implements Runnable
     @Override
     public void run()
     {
-        String ticker = tickerTask.start(market);
+        if (market != null)
+        {
+            tickerTask.start(market);
+        }
+        else
+        {
+            tickerTask.start(marketString, abovePrice, belowPrice);
+        }
+
         jobCounter++;
 
-        if (jobCounter == 10)
+/*        if (jobCounter == 10)
         {
             jobScheduler.stopJob(this);
-        }
+        }*/
     }
 
     public void setMarket(Market market)
     {
         this.market = market;
+    }
+
+    public void setMarketString(String marketString)
+    {
+        this.marketString = marketString;
     }
 
 
@@ -42,5 +55,25 @@ public class TickerJob implements Runnable
     private JobScheduler jobScheduler;
 
     private Market market;
+    private String marketString;
+
+    private double abovePrice, belowPrice;
+
+    public double getAbovePrice() {
+        return abovePrice;
+    }
+
+    public void setAbovePrice(double abovePrice) {
+        this.abovePrice = abovePrice;
+    }
+
+    public double getBelowPrice() {
+        return belowPrice;
+    }
+
+    public void setBelowPrice(double belowPrice) {
+        this.belowPrice = belowPrice;
+    }
+
     private int jobCounter = 0;
 }
