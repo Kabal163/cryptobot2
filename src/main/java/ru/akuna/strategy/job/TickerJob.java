@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ru.akuna.dto.Market;
 import ru.akuna.strategy.task.TickerTask;
-import ru.akuna.tools.JobScheduler;
+import ru.akuna.tools.job.JobScheduler;
 
 /**
  * Created by Los Pepes on 12/27/2017.
@@ -14,24 +14,36 @@ import ru.akuna.tools.JobScheduler;
  */
 @Component
 @Scope("prototype")
-public class TickerJob implements Runnable
+public class TickerJob extends CryptoJob
 {
-
     @Override
     public void run()
     {
-        String ticker = tickerTask.start(market);
+        if (market != null)
+        {
+            tickerTask.start(market);
+        }
+        else
+        {
+            tickerTask.start(marketName, abovePrice, belowPrice);
+        }
+
         jobCounter++;
 
-        if (jobCounter == 10)
+/*        if (jobCounter == 10)
         {
             jobScheduler.stopJob(this);
-        }
+        }*/
     }
 
     public void setMarket(Market market)
     {
         this.market = market;
+    }
+
+    public void setMarketName(String marketName)
+    {
+        this.marketName = marketName;
     }
 
 
@@ -42,5 +54,29 @@ public class TickerJob implements Runnable
     private JobScheduler jobScheduler;
 
     private Market market;
+    private String marketName;
+
+    private double abovePrice, belowPrice;
+
+    public double getAbovePrice() {
+        return abovePrice;
+    }
+
+    public void setAbovePrice(double abovePrice) {
+        this.abovePrice = abovePrice;
+    }
+
+    public double getBelowPrice() {
+        return belowPrice;
+    }
+
+    public void setBelowPrice(double belowPrice) {
+        this.belowPrice = belowPrice;
+    }
+
+    public String getMarketName() {
+        return marketName;
+    }
+
     private int jobCounter = 0;
 }

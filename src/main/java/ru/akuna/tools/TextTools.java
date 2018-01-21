@@ -15,12 +15,17 @@ public class TextTools
 
     public String removeExhibitor(double price)
     {
+         return getBtcDecimalFormat().format(price);
+    }
+
+    public DecimalFormat getBtcDecimalFormat()
+    {
         if (df == null)
         {
             df = new DecimalFormat("0", DecimalFormatSymbols.getInstance(Locale.ENGLISH));
             df.setMaximumFractionDigits(340); // 340 = DecimalFormat.DOUBLE_FRACTION_DIGITS
         }
 
-        return df.format(price);
+        return df;
     }
 }

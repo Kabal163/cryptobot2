@@ -7,7 +7,7 @@ import org.springframework.context.ApplicationContext;
 import ru.akuna.dto.Market;
 import ru.akuna.providers.ApplicationContextProvider;
 import ru.akuna.strategy.job.TickerJob;
-import ru.akuna.tools.JobScheduler;
+import ru.akuna.tools.job.JobScheduler;
 import ru.akuna.tools.MathTools;
 import ru.akuna.tools.TextTools;
 import ru.akuna.tools.properties.ApplicationProperties;
@@ -81,12 +81,12 @@ public class MarketTask extends RecursiveAction
         /*synchronized (context)
         {
             MessageProvider telegramMessageProvider = (MessageProvider) context.getBean("telegramMessageProvider");
-            telegramMessageProvider.sendMessage("Market: " + marketName + " has increased price by: " + percent + "%\n" +
+            telegramMessageProvider.sendMessage("BittrexMarket: " + marketName + " has increased price by: " + percent + "%\n" +
                     "Old price: " + textTools.removeExhibitor(oldLast) + "\n" +
                     "New price: " + textTools.removeExhibitor(currentLastPrice));
         }*/
 
-        LOG.info("Market: " + marketName + " has increased price by: " + percent + "%\n" +
+        LOG.info("BittrexMarket: " + marketName + " has increased price by: " + percent + "%\n" +
                 "Old price: " + textTools.removeExhibitor(oldLast) + "\n" +
                 "New price: " + textTools.removeExhibitor(currentLastPrice));
     }

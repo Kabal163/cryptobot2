@@ -6,4 +6,9 @@ public class MathTools
     {
         return Math.round(((price * percent / 100) + price) * 100000000d) / 100000000d;
     }
+
+    public double roundToSpecifiedNumber(double price, double numberOfSymbols)
+    {
+        return Math.round(price * numberOfSymbols) / numberOfSymbols;
+    }
 }

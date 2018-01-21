@@ -52,5 +52,4 @@ public class MainConfig
     {
         return Executors.newScheduledThreadPool(10);
     }
-
 }

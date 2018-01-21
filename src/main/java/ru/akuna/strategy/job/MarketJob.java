@@ -5,7 +5,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ru.akuna.strategy.stockService.MarketService;
 import ru.akuna.strategy.task.MarketTask;
-import ru.akuna.tools.JobScheduler;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.Phaser;
@@ -16,7 +15,7 @@ import java.util.concurrent.Phaser;
 
 @Component
 @Scope("prototype")
-public class MarketJob implements Runnable
+public class MarketJob extends CryptoJob
 {
     @Override
     public void run()

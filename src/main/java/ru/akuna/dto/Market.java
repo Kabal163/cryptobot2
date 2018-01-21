@@ -21,6 +21,29 @@ public class Market
     @JsonProperty("Ask")
     private double ask;
 
+    @JsonProperty("BelowPrice")
+    private double belowPrice;
+
+    public double getBelowPrice() {
+        return belowPrice;
+    }
+
+    public void setBelowPrice(double belowPrice) {
+        this.belowPrice = belowPrice;
+    }
+
+    public double getAbovePrice() {
+        return abovePrice;
+    }
+
+    public void setAbovePrice(double abovePrice) {
+        this.abovePrice = abovePrice;
+    }
+
+    @JsonProperty("AbovePrice")
+
+    private double abovePrice;
+
     @JsonProperty("MarketName")
     private String marketName;
 
@@ -64,21 +87,10 @@ public class Market
         this.marketName = marketName;
     }
 
-    public void testPerformance()
-    {
-        for (int i = 0; i < 99999999; i ++)
-        {
-            if (i == 99999998)
-            {
-                log.info("Market: " + getMarketName() + " finished analysis.");
-            }
-        }
-    }
-
     @Override
     public String toString()
     {
-        return "Market{" +
+        return "BittrexMarket{" +
                 "last=" + last +
                 ", bid=" + bid +
                 ", ask=" + ask +

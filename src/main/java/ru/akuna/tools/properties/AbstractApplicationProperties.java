@@ -20,7 +20,7 @@ public abstract class AbstractApplicationProperties implements ApplicationProper
     public void init()
     {
         URL url = getClass().getClassLoader().getResource(path + fileName);
-        if(url != null) file = new File(url.getFile().replaceAll("%20", " "));
+        if(url != null) file = new File( url.getFile().replaceAll("%20", " "));
 
         try(FileInputStream fis = new FileInputStream(file.getPath()))
         {
@@ -108,7 +108,7 @@ public abstract class AbstractApplicationProperties implements ApplicationProper
 
     @Autowired
     private Properties properties;
-    private File file;
+    protected File file;
     private String fileName;
     private String path;
     private static final String ROOT_CONFIG_FOLDER = "config";
