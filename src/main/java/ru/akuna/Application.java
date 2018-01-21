@@ -12,6 +12,7 @@ import ru.akuna.dao.MarketRepository;
 import ru.akuna.demo.DemoAccount;
 import ru.akuna.strategy.PumpStrategy;
 import ru.akuna.tools.job.TickerJobScheduler;
+
 /**
  * Created by Los Pepes on 12/9/2017.
  */

@@ -1,11 +1,9 @@
 package ru.akuna.tools.job;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import ru.akuna.dao.BittrexMarket;
 import ru.akuna.providers.ApplicationContextProvider;
-import ru.akuna.strategy.job.CryptoJob;
 import ru.akuna.strategy.job.TickerJob;
 import ru.akuna.tools.properties.ApplicationProperties;
 
