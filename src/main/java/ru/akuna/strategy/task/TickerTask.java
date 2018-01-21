@@ -58,7 +58,7 @@ public class TickerTask
         lastPrice = ticker.getLast();
         isFirstTime = false;
 
-       /* System.out.println(result);*/
+        /*System.out.println(result);*/
 
         if (lastPrice >= abovePrice)
         {
