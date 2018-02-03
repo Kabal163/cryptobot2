@@ -1,17 +1,12 @@
-package ru.akuna.msg.impls;
+package ru.akuna.providers.msg.impls;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-import ru.akuna.msg.MessageProvider;
+import ru.akuna.providers.msg.MessageProvider;
 import ru.akuna.tools.properties.ApplicationProperties;
-import ru.akuna.tools.properties.MsgProperties;
-
-import javax.annotation.Resource;
 
 /**
  * Created by Los Pepes on 12/16/2017.

@@ -1,12 +1,10 @@
-package ru.akuna.strategy.stockService;
+package ru.akuna.solutions.stockService;
 
-import com.google.common.collect.ImmutableList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 import ru.akuna.BittrexUrls;
-import ru.akuna.dto.MarketSummaries;
 import ru.akuna.dto.Ticker;
 
 /**

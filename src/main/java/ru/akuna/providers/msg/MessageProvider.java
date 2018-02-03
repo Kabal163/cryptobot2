@@ -1,4 +1,4 @@
-package ru.akuna.msg;
+package ru.akuna.providers.msg;
 
 /**
  * Created by Los Pepes on 12/16/2017.

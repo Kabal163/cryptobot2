@@ -1,10 +1,10 @@
-package ru.akuna.strategy.job;
+package ru.akuna.solutions.job;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ru.akuna.dto.Market;
-import ru.akuna.strategy.task.TickerTask;
+import ru.akuna.solutions.task.TickerTask;
 import ru.akuna.tools.job.JobScheduler;
 
 /**

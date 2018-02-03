@@ -4,7 +4,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 import ru.akuna.entities.BittrexMarket;
 import ru.akuna.providers.ApplicationContextProvider;
-import ru.akuna.strategy.job.TickerJob;
+import ru.akuna.solutions.job.TickerJob;
 import ru.akuna.tools.properties.ApplicationProperties;
 
 @Component
@@ -26,7 +26,7 @@ public class TickerJobScheduler extends JobScheduler
     {
         ApplicationContext context = ApplicationContextProvider.getApplicationContext();
         TickerJob tickerJob = context.getBean("tickerJob", TickerJob.class);
-        ApplicationProperties properties = context.getBean("pumpStrategyProperties", ApplicationProperties.class);
+        ApplicationProperties properties = context.getBean("strategyProperties", ApplicationProperties.class);
 
         tickerJob.setMarketName(market.getMarketName());
         tickerJob.setAbovePrice(market.getAbovePrice());
