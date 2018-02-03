@@ -18,15 +18,16 @@ import static ru.akuna.BittrexUrls.GET_ORDER_BOOK;
 import static ru.akuna.BittrexUrls.GET_TICKER;
 
 @Component
-@Scope("prototype")
 public class MarketService
 {
     @Autowired
     private RestTemplate restTemplate;
+    private List<Market> cachedMarkets;
 
     public List<Market> getAllMarkets()
     {
-        return ImmutableList.copyOf(restTemplate.getForObject(BittrexUrls.GET_MARKET_SUMMARIES, MarketSummaries.class).getMarkets());
+        cachedMarkets = ImmutableList.copyOf(restTemplate.getForObject(BittrexUrls.GET_MARKET_SUMMARIES, MarketSummaries.class).getMarkets());
+        return cachedMarkets;
     }
 
     private OrderBookWrapper getOrderBook(String market)
@@ -41,5 +42,10 @@ public class MarketService
         String getTickerUrl = MessageFormat.format(GET_TICKER, market);
 
         return restTemplate.getForObject(getTickerUrl, Ticker.class);
+    }
+
+    public List<Market> getMarketsFromCache()
+    {
+        return cachedMarkets;
     }
 }
