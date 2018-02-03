@@ -2,8 +2,7 @@ package ru.akuna.tools.job;
 
 import org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler;
 import org.springframework.stereotype.Component;
-import ru.akuna.strategy.job.CryptoJob;
-import ru.akuna.strategy.job.TickerJob;
+import ru.akuna.solutions.job.CryptoJob;
 
 import java.util.IdentityHashMap;
 import java.util.Map;

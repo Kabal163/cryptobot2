@@ -1,51 +1,30 @@
-package ru.akuna.strategy.task;
+package ru.akuna.solutions.task;
 
-import com.google.common.collect.Lists;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import ru.akuna.dto.Market;
 import ru.akuna.providers.ApplicationContextProvider;
-import ru.akuna.strategy.job.TickerJob;
-import ru.akuna.tools.job.JobScheduler;
+import ru.akuna.solutions.job.TickerJob;
 import ru.akuna.tools.MathTools;
 import ru.akuna.tools.TextTools;
+import ru.akuna.tools.job.JobScheduler;
 import ru.akuna.tools.properties.ApplicationProperties;
 
 import java.util.IdentityHashMap;
-import java.util.List;
 import java.util.Map;
-import java.util.concurrent.Phaser;
-import java.util.concurrent.RecursiveAction;
 
-public class MarketTask extends RecursiveAction
+@Deprecated
+public class OldMarketTask
 {
-    public MarketTask(List<Market> markets, Phaser phaser)
+    private Market market;
+
+    public OldMarketTask(Market market)
     {
-        this.markets = markets;
-        this.phaser = phaser;
-        phaser.register();
+        this.market = market;
     }
 
-    @Override
-    protected void compute()
-    {
-        if (markets.size() > 2)
-        {
-            createSubTasks();
-        }
-        else
-        {
-            for (Market market : markets)
-            {
-                start(market);
-            }
-        }
-
-        phaser.arrive();
-    }
-
-    private void start(Market market)
+    public void start()
     {
         String marketName = market.getMarketName();
         Double lastPrice = getResultValue(marketName);
@@ -69,7 +48,7 @@ public class MarketTask extends RecursiveAction
         ApplicationContext context = ApplicationContextProvider.getApplicationContext();
         JobScheduler jobScheduler = context.getBean("jobScheduler", JobScheduler.class);
         TickerJob tickerJob = context.getBean("tickerJob", TickerJob.class);
-        ApplicationProperties properties = context.getBean("pumpStrategyProperties", ApplicationProperties.class);
+        ApplicationProperties properties = context.getBean("strategyProperties", ApplicationProperties.class);
         tickerJob.setMarket(market);
         jobScheduler.scheduleAtFixedRate(tickerJob, properties.getLongProperty("ticker_job_time_rate"));
     }
@@ -78,7 +57,7 @@ public class MarketTask extends RecursiveAction
     {
         double percent = (currentLastPrice - oldLast) / oldLast * 100;
 
-        /*synchronized (context)
+/*        synchronized (context)
         {
             MessageProvider telegramMessageProvider = (MessageProvider) context.getBean("telegramMessageProvider");
             telegramMessageProvider.sendMessage("BittrexMarket: " + marketName + " has increased price by: " + percent + "%\n" +
@@ -98,19 +77,6 @@ public class MarketTask extends RecursiveAction
         return currentLastPrice >= priceWithPercent;
     }
 
-    private void createSubTasks()
-    {
-        int new_size = markets.size() / 2;
-
-        List<List<Market>> subLists = Lists.partition(markets, new_size);
-
-        for (List<Market> subList : subLists)
-        {
-            MarketTask task = new MarketTask(subList, phaser);
-            task.fork();
-        }
-    }
-
     private Double getResultValue(String marketName)
     {
         synchronized (market2last)
@@ -127,12 +93,9 @@ public class MarketTask extends RecursiveAction
         }
     }
 
-    private static final Logger LOG = LoggerFactory.getLogger(MarketTask.class);
-    private static MathTools mathTools = new MathTools();
-    private static TextTools textTools = new TextTools();
-    private static Map<String, Double> market2last = new IdentityHashMap<>();
+    private final Logger LOG = LoggerFactory.getLogger(OldMarketTask.class);
 
-    private List<Market> markets;
-    private Phaser phaser;
-
+    private MathTools mathTools = new MathTools();
+    private TextTools textTools = new TextTools();
+    private Map<String, Double> market2last = new IdentityHashMap<>();
 }

@@ -10,8 +10,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import ru.akuna.entities.BittrexMarket;
 import ru.akuna.dao.MarketRepository;
 import ru.akuna.demo.DemoAccount;
-import ru.akuna.strategy.PumpStrategy;
+import ru.akuna.solutions.job.MarketJob;
+import ru.akuna.tools.job.JobScheduler;
 import ru.akuna.tools.job.TickerJobScheduler;
+import ru.akuna.tools.properties.AbstractApplicationProperties;
 
 /**
  * Created by Los Pepes on 12/9/2017.
@@ -27,10 +29,18 @@ public class Application
     }
 
     @Bean
-    public CommandLineRunner run() throws Exception {
+    public CommandLineRunner run() throws Exception
+    {
         return args -> {
-            runTickerJobs();
+           /* runTickerJobs();*/
+            runMarketJob();
         };
+    }
+
+    private void runMarketJob()
+    {
+        long timeRate = strategyProperties.getLongProperty("market_job_time_rate");
+        jobScheduler.scheduleAtFixedRate(marketJob, timeRate);
     }
 
     private void runTickerJobs()
@@ -42,9 +52,6 @@ public class Application
     }
 
     @Autowired
-    private PumpStrategy pumpStrategy;
-
-    @Autowired
     private DemoAccount demoAccount;
 
     @Autowired
@@ -52,4 +59,13 @@ public class Application
 
     @Autowired
     private TickerJobScheduler tickerJobScheduler;
+
+    @Autowired
+    private JobScheduler jobScheduler;
+
+    @Autowired
+    private AbstractApplicationProperties strategyProperties;
+
+    @Autowired
+    private MarketJob marketJob;
 }

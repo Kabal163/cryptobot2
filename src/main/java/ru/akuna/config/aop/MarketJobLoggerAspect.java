@@ -1,4 +1,4 @@
-package ru.akuna.aop;
+package ru.akuna.config.aop;
 
 
 import org.aspectj.lang.JoinPoint;
@@ -17,13 +17,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class MarketJobLoggerAspect
 {
-    @Before("execution(* ru.akuna.strategy.job.MarketJob.run())")
+    @Before("execution(* ru.akuna.solutions.job.MarketJob.run())")
     public void logStartAnalysis(JoinPoint joinPoint)
     {
         LOG.info("Start Analysis");
     }
 
-    @After("execution(* ru.akuna.strategy.job.MarketJob.run())")
+    @After("execution(* ru.akuna.solutions.job.MarketJob.run())")
     public void logFinishAnalysis(JoinPoint joinPoint)
     {
         LOG.info("Finish Analysis");

@@ -1,4 +1,4 @@
-package ru.akuna.strategy.job;
+package ru.akuna.solutions.job;
 
 public abstract class CryptoJob implements Runnable
 {

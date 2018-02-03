@@ -1,4 +1,4 @@
-package ru.akuna.strategy.stockService;
+package ru.akuna.solutions.stockService;
 
 import com.google.common.collect.ImmutableList;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -3,7 +3,7 @@ package ru.akuna.demo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.akuna.dto.Ticker;
-import ru.akuna.strategy.stockService.TickerService;
+import ru.akuna.solutions.stockService.TickerService;
 import ru.akuna.tools.properties.ApplicationProperties;
 
 import java.util.IdentityHashMap;

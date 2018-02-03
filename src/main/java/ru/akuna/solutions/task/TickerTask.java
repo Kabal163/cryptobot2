@@ -1,4 +1,4 @@
-package ru.akuna.strategy.task;
+package ru.akuna.solutions.task;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ru.akuna.dto.Market;
 import ru.akuna.dto.Ticker;
-import ru.akuna.msg.impls.TelegramMessageProvider;
-import ru.akuna.strategy.stockService.TickerService;
+import ru.akuna.providers.msg.impls.TelegramMessageProvider;
+import ru.akuna.solutions.stockService.TickerService;
 import ru.akuna.tools.MathTools;
 import ru.akuna.tools.TextTools;
 

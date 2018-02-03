@@ -9,8 +9,8 @@ import javax.annotation.PostConstruct;
  * Created by Los Pepes on 12/23/2017.
  */
 @Component
-@Qualifier("PumpStrategyProperties")
-public class PumpStrategyProperties extends AbstractApplicationProperties
+@Qualifier("StrategyProperties")
+public class StrategyProperties extends AbstractApplicationProperties
 {
     @Override
     @PostConstruct
@@ -22,5 +22,5 @@ public class PumpStrategyProperties extends AbstractApplicationProperties
     }
 
     private static final String PATH = "config/properties/";
-    private static final String FILE_NAME = "PumpStrategy.properties";
+    private static final String FILE_NAME = "strategy.properties";
 }
