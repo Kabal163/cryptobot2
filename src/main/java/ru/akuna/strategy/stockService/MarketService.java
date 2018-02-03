@@ -17,10 +17,6 @@ import java.util.List;
 import static ru.akuna.BittrexUrls.GET_ORDER_BOOK;
 import static ru.akuna.BittrexUrls.GET_TICKER;
 
-/*
-* Теперь сервис скедулится благодаря спрингу. Каждые 30 секунд он достает данные с биржи
-* Затем на это дело реагирует MarketServiceAspect
-*/
 @Component
 @Scope("prototype")
 public class MarketService

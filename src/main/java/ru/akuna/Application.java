@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import ru.akuna.dao.BittrexMarket;
+import ru.akuna.entities.BittrexMarket;
 import ru.akuna.dao.MarketRepository;
 import ru.akuna.demo.DemoAccount;
 import ru.akuna.strategy.PumpStrategy;

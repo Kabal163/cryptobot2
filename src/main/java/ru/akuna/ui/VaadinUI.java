@@ -7,7 +7,7 @@ import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
-import ru.akuna.dao.BittrexMarket;
+import ru.akuna.entities.BittrexMarket;
 import ru.akuna.dao.MarketRepository;
 import ru.akuna.ui.renderers.BtcPriceRenderer;
 

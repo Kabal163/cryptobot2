@@ -1,7 +1,7 @@
-package ru.akuna.dao;
+package ru.akuna.entities;
 
 
-import ru.akuna.dao.listeners.BittrexMarketListener;
+import ru.akuna.entities.listeners.BittrexMarketListener;
 
 import javax.persistence.*;
 

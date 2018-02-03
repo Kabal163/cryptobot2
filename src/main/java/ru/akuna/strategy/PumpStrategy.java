@@ -6,13 +6,6 @@ import ru.akuna.strategy.job.MarketJob;
 import ru.akuna.tools.job.JobScheduler;
 import ru.akuna.tools.properties.ApplicationProperties;
 
-/**
- * Created by Los Pepes on 12/27/2017.
- * Далее здесь, скедулится джоба. Для этого используется кастомный класс JobScheduler
- * Джоба начинает выполняться
- */
-
-
 @Component
 public class PumpStrategy
 {

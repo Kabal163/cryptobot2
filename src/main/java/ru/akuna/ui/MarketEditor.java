@@ -12,7 +12,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.ui.NumberField;
-import ru.akuna.dao.BittrexMarket;
+import ru.akuna.entities.BittrexMarket;
 import ru.akuna.dao.MarketRepository;
 import ru.akuna.ui.converters.BtcPriceToStringConverter;
 

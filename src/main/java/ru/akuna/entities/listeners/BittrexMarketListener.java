@@ -1,8 +1,8 @@
-package ru.akuna.dao.listeners;
+package ru.akuna.entities.listeners;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.akuna.dao.BittrexMarket;
+import ru.akuna.entities.BittrexMarket;
 import ru.akuna.tools.job.TickerJobScheduler;
 
 import javax.persistence.PostPersist;
