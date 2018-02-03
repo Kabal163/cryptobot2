@@ -5,26 +5,27 @@ import org.springframework.stereotype.Component;
 /**
  * Created by Los Pepes on 2/3/2018.
  */
-@Component
 public class Candle
 {
+    private String marketName;
     private double maxPrice;
     private double minPrice;
     private double openPrice;
     private double lastPrice;
     private boolean isOpen;
 
-    public Candle()
+    public Candle(String marketName)
     {
-        this(0);
+        this(0, marketName);
     }
 
-    public Candle(double openPrice)
+    public Candle(double openPrice, String marketName)
     {
         this.openPrice = openPrice;
         this.lastPrice = openPrice;
         this.maxPrice = openPrice;
         this.minPrice = openPrice;
+        this.marketName = marketName;
         this.isOpen = true;
     }
 
@@ -78,11 +79,22 @@ public class Candle
         isOpen = open;
     }
 
+    public String getMarketName()
+    {
+        return marketName;
+    }
+
+    public void setMarketName(String marketName)
+    {
+        this.marketName = marketName;
+    }
+
     @Override
     public String toString()
     {
         return "Candle{" +
-                "maxPrice=" + maxPrice +
+                "marketName='" + marketName + '\'' +
+                ", maxPrice=" + maxPrice +
                 ", minPrice=" + minPrice +
                 ", openPrice=" + openPrice +
                 ", lastPrice=" + lastPrice +
@@ -102,7 +114,8 @@ public class Candle
         if (Double.compare(candle.getMinPrice(), getMinPrice()) != 0) return false;
         if (Double.compare(candle.getOpenPrice(), getOpenPrice()) != 0) return false;
         if (Double.compare(candle.getLastPrice(), getLastPrice()) != 0) return false;
-        return isOpen() == candle.isOpen();
+        if (isOpen() != candle.isOpen()) return false;
+        return getMarketName().equals(candle.getMarketName());
     }
 
     @Override
@@ -110,8 +123,9 @@ public class Candle
     {
         int result;
         long temp;
+        result = getMarketName().hashCode();
         temp = Double.doubleToLongBits(getMaxPrice());
-        result = (int) (temp ^ (temp >>> 32));
+        result = 31 * result + (int) (temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(getMinPrice());
         result = 31 * result + (int) (temp ^ (temp >>> 32));
         temp = Double.doubleToLongBits(getOpenPrice());

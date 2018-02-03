@@ -12,6 +12,7 @@ import ru.akuna.dto.OrderBookWrapper;
 import ru.akuna.dto.Ticker;
 
 import java.text.MessageFormat;
+import java.util.Collections;
 import java.util.List;
 
 import static ru.akuna.BittrexUrls.GET_ORDER_BOOK;
@@ -46,6 +47,6 @@ public class MarketService
 
     public List<Market> getMarketsFromCache()
     {
-        return cachedMarkets;
+        return cachedMarkets != null? cachedMarkets : Collections.emptyList();
     }
 }
