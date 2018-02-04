@@ -2,23 +2,21 @@ package ru.akuna.entities;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.akuna.ExceptionMessages;
 import ru.akuna.dto.Market;
 import ru.akuna.solutions.stockService.MarketService;
 import ru.akuna.tools.properties.ApplicationProperties;
 
 import javax.annotation.PostConstruct;
-import javax.xml.ws.Holder;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 
 
 /**
  * Created by Los Pepes on 2/3/2018.
  * Таска будет управлять данным контейнером. Едиственное что нужно знать таске - это когда закрывать свечу.
- * То есть у нас всего два публичных метода - это обновление свечи и ее закрытие.
  */
 @Component
-public class CandleContainer
+public class CandleContainer implements ICandleContainer
 {
     @PostConstruct
     public void init()
@@ -37,11 +35,48 @@ public class CandleContainer
         edit(candle);
     }
 
-    public void closeCandle(Candle candle) throws Exception
+    public void updateAndCloseCandle(Candle candle) throws Exception
     {
         CandlesHolder holder = edit(candle);
         holder.candles.getLast().setOpen(false);
         startNewCandle(holder);
+    }
+
+    public Candle getLastClosedCandle(String marketName)
+    {
+        LinkedList<Candle> candles = getCandleHolder(marketName).candles;
+        Candle lastCandle = candles.getLast();
+        if(!lastCandle.isOpen())
+        {
+            return lastCandle;
+        }
+        else
+        {
+            return candles.get(candles.size() - 2);
+        }
+    }
+
+    public Candle getOpenCandle(String marketName)
+    {
+        return getCandleHolder(marketName).candles.getLast();
+    }
+
+    public List<Candle> getAllCandles(String marketName)
+    {
+        return getCandleHolder(marketName).candles;
+    }
+
+    public List<Candle> getSpecifiedLastCandles(String marketName, int amountOf)
+    {
+        CandlesHolder holder = getCandleHolder(marketName);
+        Candle[] c1 = new Candle[holder.candles.size()];
+        c1 = holder.candles.toArray(c1);
+
+        int startIndex = holder.candles.size() - amountOf;
+        int lastIndex = holder.candles.size() - 1;
+
+        Candle[] c2 = Arrays.copyOfRange(c1, startIndex, lastIndex);
+        return Arrays.asList(c2);
     }
 
     private CandlesHolder edit(Candle candle) throws Exception
@@ -117,12 +152,12 @@ public class CandleContainer
                 return holder;
             }
         }
-        return null;
+        throw new IllegalArgumentException(ExceptionMessages.NO_SUCH_CANDLE);
     }
 
     private void checkIsOpen(Candle candle) throws Exception
     {
-        if(!candle.isOpen()) throw new Exception("The candle of " + candle.getMarketName() + " market is already closed");
+        if(!candle.isOpen()) throw new Exception(String.format(ExceptionMessages.CANDLE_IS_ALREADY_CLOSED, candle.getMarketName()));
     }
 
     private void setMinAndMaxPrice(Candle candleToBeUpdated, Candle freshCandle)
