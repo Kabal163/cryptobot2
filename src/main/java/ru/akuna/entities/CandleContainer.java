@@ -3,11 +3,8 @@ package ru.akuna.entities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.akuna.ExceptionMessages;
-import ru.akuna.dto.Market;
-import ru.akuna.solutions.stockService.MarketService;
 import ru.akuna.tools.properties.ApplicationProperties;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 
 
@@ -18,16 +15,10 @@ import java.util.*;
 @Component
 public class CandleContainer
 {
-    @PostConstruct
     public void init()
     {
         candlesNumber = strategyProperties.getIntProperty(CANDLES_NUMBER);
-        List<Market> allMarkets = marketService.getAllMarkets();
-
-        createWithInitSize(allMarkets.size());
-        fillIn(allMarkets);
-
-        candlesByMarketName = Collections.unmodifiableList(candlesByMarketName);
+        candlesByMarketName = new LinkedList<>();
     }
 
     /**
@@ -35,9 +26,9 @@ public class CandleContainer
      * @param candle the source candle which we use to update the distinct one.
      *               The distinct candle is found by marketName from source candle.
      */
-    public void editCurrentCandle(Candle candle) throws Exception
+    public void updateCurrentCandle(Candle candle) throws Exception
     {
-        edit(candle);
+        update(candle);
     }
 
     /**
@@ -47,7 +38,7 @@ public class CandleContainer
      */
     public void updateAndCloseCandle(Candle candle) throws Exception
     {
-        CandlesHolder holder = edit(candle);
+        CandlesHolder holder = update(candle);
         holder.candles.getLast().setOpen(false);
         startNewCandle(holder);
     }
@@ -106,59 +97,16 @@ public class CandleContainer
         return Arrays.asList(c2);
     }
 
-    private CandlesHolder edit(Candle candle) throws Exception
+    private CandlesHolder update(Candle candle) throws Exception
     {
         CandlesHolder holder = getCandleHolder(candle.getMarketName());
         Candle candleToBeUpdated = holder.candles.getLast();
-        checkIsOpen(candleToBeUpdated);
         candleToBeUpdated.setLastPrice(candle.getLastPrice());
         setMinAndMaxPrice(candleToBeUpdated, candle);
         return holder;
     }
 
-    private void createWithInitSize(int initSize)
-    {
-        if(initSize > 0)
-        {
-            candlesByMarketName = new ArrayList<>(initSize);
-        }
-        else
-        {
-            candlesByMarketName = new ArrayList<>(DEFAULT_SIZE);
-        }
-    }
-
-    private void fillIn(List<Market> allMarkets)
-    {
-        for(Market market : allMarkets)
-        {
-            CandlesHolder holder = new CandlesHolder();
-            holder.candles = new LinkedList<>();
-            holder.marketName = market.getMarketName();
-
-            candlesByMarketName.add(holder);
-            startNewCandle(holder);
-        }
-    }
-
     private void startNewCandle(CandlesHolder holder)
-    {
-        if(holder.candles.size() == 0)
-        {
-            openFirstCandle(holder);
-        }
-        else
-        {
-            openBasedOnPrevious(holder);
-        }
-    }
-
-    private void openFirstCandle(CandlesHolder holder)
-    {
-       holder.candles.add(new Candle(holder.marketName));
-    }
-
-    private void openBasedOnPrevious(CandlesHolder holder)
     {
         Candle lastCandle = holder.candles.getLast();
 
@@ -182,11 +130,6 @@ public class CandleContainer
         throw new IllegalArgumentException(ExceptionMessages.NO_SUCH_CANDLE);
     }
 
-    private void checkIsOpen(Candle candle) throws Exception
-    {
-        if(!candle.isOpen()) throw new Exception(String.format(ExceptionMessages.CANDLE_IS_ALREADY_CLOSED, candle.getMarketName()));
-    }
-
     private void setMinAndMaxPrice(Candle candleToBeUpdated, Candle freshCandle)
     {
         double oldMinPrice = candleToBeUpdated.getMinPrice();
@@ -206,14 +149,10 @@ public class CandleContainer
     }
 
     @Autowired
-    private MarketService marketService;
-    @Autowired
     private ApplicationProperties strategyProperties;
 
     private List<CandlesHolder> candlesByMarketName;
     private int candlesNumber;
 
     private final static String CANDLES_NUMBER = ""; //todo
-    private final static int DEFAULT_SIZE = 50;
-
 }
