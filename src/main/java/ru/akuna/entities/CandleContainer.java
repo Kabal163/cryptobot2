@@ -22,10 +22,10 @@ public class CandleContainer implements ICandleContainer
     public void init()
     {
         candlesNumber = strategyProperties.getIntProperty(CANDLES_NUMBER);
-        List<Market> cachedMarkets = marketService.getMarketsFromCache();
+        List<Market> allMarkets = marketService.getAllMarkets();
 
-        createWithInitSize(cachedMarkets.size());
-        fillIn(cachedMarkets);
+        createWithInitSize(allMarkets.size());
+        fillIn(allMarkets);
 
         candlesByMarketName = Collections.unmodifiableList(candlesByMarketName);
     }
@@ -101,9 +101,9 @@ public class CandleContainer implements ICandleContainer
         }
     }
 
-    private void fillIn(List<Market> cachedMarkets)
+    private void fillIn(List<Market> allMarkets)
     {
-        for(Market market : cachedMarkets)
+        for(Market market : allMarkets)
         {
             CandlesHolder holder = new CandlesHolder();
             holder.candles = new LinkedList<>();
