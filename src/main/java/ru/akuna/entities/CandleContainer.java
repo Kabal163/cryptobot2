@@ -16,7 +16,7 @@ import java.util.*;
  * Таска будет управлять данным контейнером. Едиственное что нужно знать таске - это когда закрывать свечу.
  */
 @Component
-public class CandleContainer implements ICandleContainer
+public class CandleContainer
 {
     @PostConstruct
     public void init()
@@ -30,11 +30,21 @@ public class CandleContainer implements ICandleContainer
         candlesByMarketName = Collections.unmodifiableList(candlesByMarketName);
     }
 
+    /**
+     * The method edits current open candle. If candle is closed - exception is raised.
+     * @param candle the source candle which we use to update the distinct one.
+     *               The distinct candle is found by marketName from source candle.
+     */
     public void editCurrentCandle(Candle candle) throws Exception
     {
         edit(candle);
     }
 
+    /**
+     * If current candle is open method updates it firstly. After that candle will be closed.
+     * @param candle the source candle which we use to close the distinct one.
+     *               The distinct candle is found by marketName from source candle.
+     */
     public void updateAndCloseCandle(Candle candle) throws Exception
     {
         CandlesHolder holder = edit(candle);
@@ -42,6 +52,10 @@ public class CandleContainer implements ICandleContainer
         startNewCandle(holder);
     }
 
+    /**
+     * @param marketName the name of the market which we use to find appropriate candle.
+     * @return last closed candle for this market.
+     */
     public Candle getLastClosedCandle(String marketName)
     {
         LinkedList<Candle> candles = getCandleHolder(marketName).candles;
@@ -56,16 +70,29 @@ public class CandleContainer implements ICandleContainer
         }
     }
 
+    /**
+     * @param marketName the name of the market which we use to find appropriate candle.
+     * @return last open candle for this market.
+     */
     public Candle getOpenCandle(String marketName)
     {
         return getCandleHolder(marketName).candles.getLast();
     }
 
+    /**
+     * @param marketName the name of the market which we use to find appropriate candles.
+     * @return all candles for this market.
+     */
     public List<Candle> getAllCandles(String marketName)
     {
         return getCandleHolder(marketName).candles;
     }
 
+    /**
+     * @param marketName the name of the market which we use to find appropriate candles.
+     * @param amountOf amount of last CLOSED candles which we want to get
+     * @return specified number of closed candles for this market.
+     */
     public List<Candle> getSpecifiedLastCandles(String marketName, int amountOf)
     {
         CandlesHolder holder = getCandleHolder(marketName);
