@@ -68,4 +68,6 @@ public class Application
 
     @Autowired
     private MarketJob marketJob;
+
+    public static int i = 0;
 }

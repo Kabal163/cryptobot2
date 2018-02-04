@@ -1,6 +1,6 @@
 package ru.akuna.entities;
 
-import org.springframework.stereotype.Component;
+import ru.akuna.dto.Market;
 
 /**
  * Created by Los Pepes on 2/3/2018.
@@ -13,7 +13,7 @@ public class Candle
     private double openPrice;
     private double lastPrice;
     private boolean isOpen;
-    private int countOfUpdatesBeforeClose;
+    private int countOfUpdates;
 
     public Candle(String marketName)
     {
@@ -28,6 +28,11 @@ public class Candle
         this.minPrice = openPrice;
         this.marketName = marketName;
         this.isOpen = true;
+    }
+
+    public Candle(Market market)
+    {
+        this(market.getLast(), market.getMarketName());
     }
 
     public double getMaxPrice()
@@ -90,14 +95,19 @@ public class Candle
         this.marketName = marketName;
     }
 
-    public int getCountOfUpdatesBeforeClose()
+    public int getCountOfUpdates()
     {
-        return countOfUpdatesBeforeClose;
+        return countOfUpdates;
     }
 
-    public void setCountOfUpdatesBeforeClose(int countOfUpdatesBeforeClose)
+    public void setCountOfUpdates(int countOfUpdates)
     {
-        this.countOfUpdatesBeforeClose = countOfUpdatesBeforeClose;
+        this.countOfUpdates = countOfUpdates;
+    }
+
+    public void incrementUpdateCounter()
+    {
+        this.countOfUpdates++;
     }
 
     @Override

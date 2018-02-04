@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import ru.akuna.dto.Market;
 import ru.akuna.solutions.stockService.MarketService;
+import ru.akuna.solutions.task.CandleManagementTask;
 
 import java.util.List;
 import java.util.concurrent.ForkJoinPool;
@@ -79,6 +80,7 @@ public class MarketJob extends CryptoJob
         {
             //Старое поведение
             //new OldMarketTask(market).start();
+            candleManagementTask.run(market);
 
             //Здесь будет идти сначала generic таска по созданию свечей, а затем запуск стратегий по этим свечам в for-each цикле
         }
@@ -86,6 +88,9 @@ public class MarketJob extends CryptoJob
         private List<Market> markets;
         private Phaser phaser;
     }
+
+    @Autowired
+    private CandleManagementTask candleManagementTask;
 }
 
 
