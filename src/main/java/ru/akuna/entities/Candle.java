@@ -13,6 +13,7 @@ public class Candle
     private double openPrice;
     private double lastPrice;
     private boolean isOpen;
+    private int countOfUpdatesBeforeClose;
 
     public Candle(String marketName)
     {
@@ -74,9 +75,9 @@ public class Candle
         return isOpen;
     }
 
-    public void setOpen(boolean open)
+    public void close()
     {
-        isOpen = open;
+        isOpen = false;
     }
 
     public String getMarketName()
@@ -87,6 +88,16 @@ public class Candle
     public void setMarketName(String marketName)
     {
         this.marketName = marketName;
+    }
+
+    public int getCountOfUpdatesBeforeClose()
+    {
+        return countOfUpdatesBeforeClose;
+    }
+
+    public void setCountOfUpdatesBeforeClose(int countOfUpdatesBeforeClose)
+    {
+        this.countOfUpdatesBeforeClose = countOfUpdatesBeforeClose;
     }
 
     @Override

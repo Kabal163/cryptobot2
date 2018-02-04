@@ -26,7 +26,7 @@ public class CandleContainer
      * @param candle the source candle which we use to update the distinct one.
      *               The distinct candle is found by marketName from source candle.
      */
-    public void updateCurrentCandle(Candle candle) throws Exception
+    public void updateCandle(Candle candle) throws Exception
     {
         update(candle);
     }
@@ -39,7 +39,7 @@ public class CandleContainer
     public void updateAndCloseCandle(Candle candle) throws Exception
     {
         CandlesHolder holder = update(candle);
-        holder.candles.getLast().setOpen(false);
+        holder.candles.getLast().close();
         startNewCandle(holder);
     }
 
@@ -101,8 +101,8 @@ public class CandleContainer
     {
         CandlesHolder holder = getCandleHolder(candle.getMarketName());
         Candle candleToBeUpdated = holder.candles.getLast();
-        candleToBeUpdated.setLastPrice(candle.getLastPrice());
-        setMinAndMaxPrice(candleToBeUpdated, candle);
+        setPrices(candleToBeUpdated, candle);
+
         return holder;
     }
 
@@ -130,7 +130,7 @@ public class CandleContainer
         throw new IllegalArgumentException(ExceptionMessages.NO_SUCH_CANDLE);
     }
 
-    private void setMinAndMaxPrice(Candle candleToBeUpdated, Candle freshCandle)
+    private void setPrices(Candle candleToBeUpdated, Candle freshCandle)
     {
         double oldMinPrice = candleToBeUpdated.getMinPrice();
         double oldMaxPrice = candleToBeUpdated.getMaxPrice();
@@ -140,6 +140,8 @@ public class CandleContainer
 
         if(oldMaxPrice < newMaxPrice) candleToBeUpdated.setMaxPrice(newMaxPrice);
         if(oldMinPrice > newMinPrice) candleToBeUpdated.setMinPrice(newMinPrice);
+
+        candleToBeUpdated.setLastPrice(freshCandle.getLastPrice());
     }
 
     private class CandlesHolder
