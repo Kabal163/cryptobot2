@@ -110,6 +110,11 @@ public class Candle
         this.countOfUpdates++;
     }
 
+    public boolean isBear()
+    {
+        return openPrice > lastPrice;
+    }
+
     @Override
     public String toString()
     {

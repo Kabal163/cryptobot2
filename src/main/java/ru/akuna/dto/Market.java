@@ -41,7 +41,6 @@ public class Market
     }
 
     @JsonProperty("AbovePrice")
-
     private double abovePrice;
 
     @JsonProperty("MarketName")

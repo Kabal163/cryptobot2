@@ -10,10 +10,9 @@ import java.util.*;
 
 /**
  * Created by Los Pepes on 2/3/2018.
- * Таска будет управлять данным контейнером. Едиственное что нужно знать таске - это когда закрывать свечу.
  */
 @Component
-public class CandleContainer
+public class CandleManager
 {
     @PostConstruct
     public void init()
@@ -24,6 +23,8 @@ public class CandleContainer
         candlesByMarketName = new LinkedList<>();
     }
 
+
+
     /**
      * The method edits current open candle. If candle is closed - exception is raised.
      * @param candle the source candle which we use to update the distinct one.
@@ -31,20 +32,19 @@ public class CandleContainer
      */
     public void updateCandle(Candle candle)
     {
-        update(candle);
+        CandlesHolder holder = getCandleHolder(candle.getMarketName());
+
+        if (holder == null)
+        {
+            createNewCandleHolder(candle);
+        }
+        else
+        {
+            updateExistsCandleHolder(candle, holder);
+        }
     }
 
-    /**
-     * If current candle is open method updates it firstly. After that candle will be closed.
-     * @param candle the source candle which we use to close the distinct one.
-     *               The distinct candle is found by marketName from source candle.
-     */
-    public void updateAndCloseCandle(Candle candle)
-    {
-        CandlesHolder holder = update(candle);
-        holder.candles.getLast().close();
-        startNewCandle(holder);
-    }
+
 
     /**
      * @param marketName the name of the market which we use to find appropriate candle.
@@ -54,6 +54,7 @@ public class CandleContainer
     {
         LinkedList<Candle> candles = getCandleHolder(marketName).candles;
         Candle lastCandle = candles.getLast();
+
         if(!lastCandle.isOpen())
         {
             return lastCandle;
@@ -63,6 +64,8 @@ public class CandleContainer
             return candles.get(candles.size() - 2);
         }
     }
+
+
 
     /**
      * @param marketName the name of the market which we use to find appropriate candle.
@@ -74,14 +77,23 @@ public class CandleContainer
     }
 
 
+
     /**
      * @param marketName the name of the market which we use to find appropriate candles.
      * @return all candles for this market.
      */
     public List<Candle> getAllCandles(String marketName)
     {
-        return getCandleHolder(marketName).candles;
+        CandlesHolder holder = getCandleHolder(marketName);
+
+        if (holder != null)
+        {
+            return holder.candles;
+        }
+
+        return null;
     }
+
 
 
     /**
@@ -92,6 +104,12 @@ public class CandleContainer
     public List<Candle> getSpecifiedLastCandles(String marketName, int amountOf)
     {
         CandlesHolder holder = getCandleHolder(marketName);
+
+        if (holder == null)
+        {
+            return null;
+        }
+
         Candle[] c1 = new Candle[holder.candles.size()];
         c1 = holder.candles.toArray(c1);
 
@@ -102,25 +120,7 @@ public class CandleContainer
         return Arrays.asList(c2);
     }
 
-    private CandlesHolder update(Candle candle)
-    {
-        //Проверить, есть ли холдер
-        //Если нет - создать и добавть туда первую свечку
-        //Если да - взять последнюю свечку и проапдейтить
 
-        CandlesHolder holder = getCandleHolder(candle.getMarketName());
-
-        if (holder == null)
-        {
-            holder = createNewCandleHolder(candle);
-        }
-        else
-        {
-            holder = updateExistsCandleHolder(candle, holder);
-        }
-
-        return holder;
-    }
 
     private CandlesHolder updateExistsCandleHolder(Candle candle, CandlesHolder holder)
     {
@@ -129,23 +129,26 @@ public class CandleContainer
         if (candleToBeUpdated.isOpen())
         {
             setPrices(candleToBeUpdated, candle);
+            candleToBeUpdated.incrementUpdateCounter();
 
-            if (isReadyToClose(candle))
+            if (isReadyToClose(candleToBeUpdated))
             {
-                candle.close();
-                //Также здесь надо стартовать новую свечу, переделать метод startNewCandle , подумать
+                candleToBeUpdated.close();
+                startNewCandle(holder);
             }
         }
 
         return holder;
     }
 
+
+
     private boolean isReadyToClose(Candle candle)
     {
-        candle.incrementUpdateCounter();
-
         return countOfCandleUpdatesBeforeClose == candle.getCountOfUpdates();
     }
+
+
 
     private CandlesHolder createNewCandleHolder(Candle candle)
     {
@@ -155,17 +158,22 @@ public class CandleContainer
         return holder;
     }
 
+
+
     private void startNewCandle(CandlesHolder holder)
     {
         Candle lastCandle = holder.candles.getLast();
 
-        if(holder.candles.size() == candleHandlerSize)
+        if (holder.candles.size() == candleHandlerSize)
         {
             holder.candles.removeFirst();
         }
+
         Candle candle = new Candle(lastCandle.getLastPrice(), holder.marketName);
         holder.candles.add(candle);
     }
+
+
 
     private CandlesHolder getCandleHolder(String marketName)
     {
@@ -176,10 +184,11 @@ public class CandleContainer
                 return holder;
             }
         }
-        /*throw new IllegalArgumentException(ExceptionMessages.NO_SUCH_CANDLE);*/
 
         return null;
     }
+
+
 
     private void setPrices(Candle candleToBeUpdated, Candle freshCandle)
     {
@@ -195,6 +204,8 @@ public class CandleContainer
         candleToBeUpdated.setLastPrice(freshCandle.getLastPrice());
     }
 
+
+
     private class CandlesHolder
     {
         CandlesHolder(Candle candle)
@@ -207,6 +218,8 @@ public class CandleContainer
         String marketName;
         LinkedList<Candle> candles;
     }
+
+
 
     @Autowired
     private ApplicationProperties strategyProperties;
