@@ -1,6 +1,9 @@
 package ru.akuna.entities;
 
+import org.springframework.context.ApplicationEventPublisher;
 import ru.akuna.dto.Market;
+import ru.akuna.providers.ApplicationContextProvider;
+import ru.akuna.publishing.events.CandleCloseEvent;
 
 /**
  * Created by Los Pepes on 2/3/2018.
@@ -14,6 +17,8 @@ public class Candle
     private double lastPrice;
     private boolean isOpen;
     private int countOfUpdates;
+
+    private ApplicationEventPublisher publisher;
 
     public Candle(String marketName)
     {
@@ -83,6 +88,10 @@ public class Candle
     public void close()
     {
         isOpen = false;
+
+        publisher = ApplicationContextProvider.getApplicationContext()
+                .getBean("ApplicationEventPublisher", ApplicationEventPublisher.class);
+        publisher.publishEvent(new CandleCloseEvent(this, getMarketName()));
     }
 
     public String getMarketName()
