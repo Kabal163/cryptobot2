@@ -1,5 +1,7 @@
 package ru.akuna.publishing.events;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationEvent;
 
 public class CandleCloseEvent extends ApplicationEvent
@@ -16,4 +18,7 @@ public class CandleCloseEvent extends ApplicationEvent
     {
         return marketName;
     }
+
+    private static final Logger LOG = LoggerFactory.getLogger(CandleCloseEvent.class);
+
 }

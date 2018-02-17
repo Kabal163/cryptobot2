@@ -1,11 +1,15 @@
 package ru.akuna.entities;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
+import ru.akuna.publishing.events.CandleCloseEvent;
 import ru.akuna.tools.properties.ApplicationProperties;
 
 import javax.annotation.PostConstruct;
-import java.util.*;
+import java.util.Arrays;
+import java.util.LinkedList;
+import java.util.List;
 
 
 /**
@@ -30,7 +34,7 @@ public class CandleManager
      * @param candle the source candle which we use to update the distinct one.
      *               The distinct candle is found by marketName from source candle.
      */
-    public void updateCandle(Candle candle)
+    public synchronized void updateCandle(Candle candle)
     {
         CandlesHolder holder = getCandleHolder(candle.getMarketName());
 
@@ -50,19 +54,50 @@ public class CandleManager
      * @param marketName the name of the market which we use to find appropriate candle.
      * @return last closed candle for this market.
      */
-    public Candle getLastClosedCandle(String marketName)
+    public synchronized Candle getLastClosedCandle(String marketName)
     {
-        LinkedList<Candle> candles = getCandleHolder(marketName).candles;
-        Candle lastCandle = candles.getLast();
+        CandlesHolder candlesHolder = getCandleHolder(marketName);
 
-        if(!lastCandle.isOpen())
+        if (candlesHolder != null)
         {
-            return lastCandle;
+            LinkedList<Candle> candles = candlesHolder.candles;
+
+            Candle lastCandle = candles.getLast();
+
+            if (!lastCandle.isOpen())
+            {
+                return lastCandle;
+            }
+/*            else
+            {
+                return candles.get(candles.size() - 2);
+            }*/
         }
-        else
+
+        return null;
+    }
+
+    public synchronized Candle getFirstClosedCandle(String marketName)
+    {
+        CandlesHolder candlesHolder = getCandleHolder(marketName);
+
+        if (candlesHolder != null)
         {
-            return candles.get(candles.size() - 2);
+            LinkedList<Candle> candles = candlesHolder.candles;
+
+            Candle lastCandle = candles.getFirst();
+
+            if (!lastCandle.isOpen())
+            {
+                return lastCandle;
+            }
+/*            else
+            {
+                return candles.get(candles.size() - 2);
+            }*/
         }
+
+        return null;
     }
 
 
@@ -71,9 +106,16 @@ public class CandleManager
      * @param marketName the name of the market which we use to find appropriate candle.
      * @return last open candle for this market.
      */
-    public Candle getOpenCandle(String marketName)
+    public synchronized Candle getOpenCandle(String marketName)
     {
-        return getCandleHolder(marketName).candles.getLast();
+        CandlesHolder candlesHolder = getCandleHolder(marketName);
+
+        if (candlesHolder != null)
+        {
+            return candlesHolder.candles.getLast();
+        }
+
+        return null;
     }
 
 
@@ -82,7 +124,7 @@ public class CandleManager
      * @param marketName the name of the market which we use to find appropriate candles.
      * @return all candles for this market.
      */
-    public List<Candle> getAllCandles(String marketName)
+    public synchronized List<Candle> getAllCandles(String marketName)
     {
         CandlesHolder holder = getCandleHolder(marketName);
 
@@ -101,7 +143,7 @@ public class CandleManager
      * @param amountOf amount of last CLOSED candles which we want to get
      * @return specified number of closed candles for this market.
      */
-    public List<Candle> getSpecifiedLastCandles(String marketName, int amountOf)
+    public synchronized List<Candle> getSpecifiedLastCandles(String marketName, int amountOf)
     {
         CandlesHolder holder = getCandleHolder(marketName);
 
@@ -122,7 +164,7 @@ public class CandleManager
 
 
 
-    private CandlesHolder updateExistsCandleHolder(Candle candle, CandlesHolder holder)
+    private synchronized CandlesHolder updateExistsCandleHolder(Candle candle, CandlesHolder holder)
     {
         Candle candleToBeUpdated = holder.candles.getLast();
 
@@ -134,6 +176,7 @@ public class CandleManager
             if (isReadyToClose(candleToBeUpdated))
             {
                 candleToBeUpdated.close();
+                throwCandleCloseEvent(candleToBeUpdated);
                 startNewCandle(holder);
             }
         }
@@ -141,16 +184,20 @@ public class CandleManager
         return holder;
     }
 
+    private void throwCandleCloseEvent(Candle candle)
+    {
+        applicationEventPublisher.publishEvent(new CandleCloseEvent(candle, candle.getMarketName()));
+    }
 
 
-    private boolean isReadyToClose(Candle candle)
+    private synchronized boolean isReadyToClose(Candle candle)
     {
         return countOfCandleUpdatesBeforeClose == candle.getCountOfUpdates();
     }
 
 
 
-    private CandlesHolder createNewCandleHolder(Candle candle)
+    private synchronized CandlesHolder createNewCandleHolder(Candle candle)
     {
         CandlesHolder holder = new CandlesHolder(candle);
         candlesByMarketName.add(holder);
@@ -160,7 +207,7 @@ public class CandleManager
 
 
 
-    private void startNewCandle(CandlesHolder holder)
+    private synchronized void startNewCandle(CandlesHolder holder)
     {
         Candle lastCandle = holder.candles.getLast();
 
@@ -175,7 +222,7 @@ public class CandleManager
 
 
 
-    private CandlesHolder getCandleHolder(String marketName)
+    private synchronized CandlesHolder getCandleHolder(String marketName)
     {
         for (CandlesHolder holder : candlesByMarketName)
         {
@@ -190,7 +237,7 @@ public class CandleManager
 
 
 
-    private void setPrices(Candle candleToBeUpdated, Candle freshCandle)
+    private synchronized void setPrices(Candle candleToBeUpdated, Candle freshCandle)
     {
         double oldMinPrice = candleToBeUpdated.getMinPrice();
         double oldMaxPrice = candleToBeUpdated.getMaxPrice();
@@ -223,6 +270,9 @@ public class CandleManager
 
     @Autowired
     private ApplicationProperties strategyProperties;
+
+    @Autowired
+    private ApplicationEventPublisher applicationEventPublisher;
 
     private List<CandlesHolder> candlesByMarketName;
     private int candleHandlerSize, countOfCandleUpdatesBeforeClose;

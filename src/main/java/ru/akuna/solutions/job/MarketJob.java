@@ -38,7 +38,7 @@ public class MarketJob extends CryptoJob
 
     class MarketAction extends RecursiveAction
     {
-        public MarketAction(List<Market> markets, Phaser phaser)
+        MarketAction(List<Market> markets, Phaser phaser)
         {
             this.markets = markets;
             this.phaser = phaser;

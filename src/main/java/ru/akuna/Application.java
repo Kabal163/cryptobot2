@@ -1,15 +1,20 @@
 package ru.akuna;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import ru.akuna.entities.BittrexMarket;
 import ru.akuna.dao.MarketRepository;
 import ru.akuna.demo.DemoAccount;
+import ru.akuna.publishing.events.CandleCloseEvent;
+import ru.akuna.publishing.listeners.CandleCloseEventListener;
 import ru.akuna.solutions.job.MarketJob;
 import ru.akuna.tools.job.JobScheduler;
 import ru.akuna.tools.job.TickerJobScheduler;
@@ -68,6 +73,4 @@ public class Application
 
     @Autowired
     private MarketJob marketJob;
-
-    public static int i = 0;
 }
